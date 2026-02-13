@@ -1,4 +1,4 @@
-.PHONY: help test-backend test-frontend test test-cov-backend test-cov-frontend test-cov lint-backend lint-frontend lint lint-fix-backend lint-fix-frontend lint-fix
+.PHONY: help test-backend test-frontend test test-cov-backend test-cov-frontend test-cov lint-backend lint-frontend lint lint-fix-backend lint-fix-frontend lint-fix test-integration test-integration-install
 
 SHELL = /bin/bash
 
@@ -6,20 +6,22 @@ help:
 	@echo "Full-Stack App - Development Commands"
 	@echo ""
 	@echo "Testing:"
-	@echo "  make test-backend       - Run backend tests (pytest)"
-	@echo "  make test-frontend      - Run frontend tests (vitest)"
-	@echo "  make test               - Run all tests"
-	@echo "  make test-cov-backend   - Run backend tests with coverage"
-	@echo "  make test-cov-frontend  - Run frontend tests with coverage"
-	@echo "  make test-cov           - Run all tests with coverage"
+	@echo "  make test-backend          - Run backend tests (pytest)"
+	@echo "  make test-frontend         - Run frontend tests (vitest)"
+	@echo "  make test                  - Run all tests"
+	@echo "  make test-cov-backend      - Run backend tests with coverage"
+	@echo "  make test-cov-frontend     - Run frontend tests with coverage"
+	@echo "  make test-cov              - Run all tests with coverage"
+	@echo "  make test-integration      - Run E2E integration tests (Playwright)"
+	@echo "  make test-integration-install - Install Playwright browsers"
 	@echo ""
 	@echo "Linting:"
-	@echo "  make lint-backend        - Run backend linter (ruff)"
-	@echo "  make lint-frontend       - Run frontend linter (ESLint)"
-	@echo "  make lint                - Run all linters"
-	@echo "  make lint-fix-backend    - Auto-fix backend lint issues"
-	@echo "  make lint-fix-frontend   - Auto-fix frontend lint issues"
-	@echo "  make lint-fix            - Auto-fix all lint issues"
+	@echo "  make lint-backend          - Run backend linter (ruff)"
+	@echo "  make lint-frontend         - Run frontend linter (ESLint)"
+	@echo "  make lint                  - Run all linters"
+	@echo "  make lint-fix-backend      - Auto-fix backend lint issues"
+	@echo "  make lint-fix-frontend     - Auto-fix frontend lint issues"
+	@echo "  make lint-fix              - Auto-fix all lint issues"
 	@echo ""
 	@echo "Note: Backend uses uv for Python package management."
 
@@ -54,3 +56,9 @@ lint-fix-frontend:
 	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && make lint-fix
 
 lint-fix: lint-fix-backend lint-fix-frontend
+
+test-integration:
+	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && npm run test:e2e
+
+test-integration-install:
+	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && npx playwright install chromium

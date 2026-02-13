@@ -23,7 +23,40 @@ Backend Linter:
 Frontend Linter:
 - cd frontend && nvm use && make lint
 
-## 3. Verify Documentation
+## 3. Run Integration/E2E Tests (Optional but Recommended)
+
+Run E2E tests if they exist. E2E tests use Playwright with Chromium (headless).
+
+First, start the required servers:
+
+Backend (port 8001):
+```bash
+cd backend
+source .venv/bin/activate
+CORS_ORIGINS='["http://localhost:5174"]' SECRET_KEY='test-secret-key' \
+  python -m uvicorn app.main:app --port 8001 &
+```
+
+Frontend (port 5174):
+```bash
+cd frontend
+npm run test:server &
+```
+
+Then run E2E tests:
+```bash
+cd frontend
+nvm use
+npm run test:e2e
+```
+
+Or use root Makefile (handles server startup):
+```bash
+make test-integration-install  # First time only
+make test-integration
+```
+
+## 4. Verify Documentation
 
 Per AGENTS.md Pre-Commit Requirements, update documentation if changes affect:
 - README.md (root)
@@ -31,7 +64,7 @@ Per AGENTS.md Pre-Commit Requirements, update documentation if changes affect:
 - frontend/README.md
 - AGENTS.md (if process/tasks change)
 
-## 4. Only Then Commit
+## 5. Only Then Commit
 
 After all tests pass, linters pass, and documentation is updated:
 - git add -A && git commit -m "<message>"

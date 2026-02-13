@@ -112,3 +112,20 @@ npm test              # Run all tests
 npm run test:watch   # Watch mode
 npm run test:coverage # With coverage
 ```
+
+## E2E Tests
+
+The project includes Playwright E2E tests:
+
+```bash
+# Install Playwright browsers (one time only)
+npx playwright install chromium
+
+# Run E2E tests
+npm run test:e2e
+
+# Or use Makefile
+make test-e2e
+```
+
+E2E tests require the backend (port 8001) and frontend (port 5174) servers to be running.

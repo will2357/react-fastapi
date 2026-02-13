@@ -43,6 +43,8 @@ venv.bak/
 .env.development
 .env.test
 .env.production
+!.env.dev
+!.env.test
 
 # Testing
 .pytest_cache/
