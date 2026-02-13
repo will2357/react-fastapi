@@ -1,6 +1,6 @@
 # Frontend
 
-A React 19 frontend application built with Vite.
+A React 19 frontend application integrated with FastAPI backend, built with Vite.
 
 ## Prerequisites
 
@@ -18,6 +18,8 @@ npm run dev
 ```
 
 The app will run on `http://localhost:5173`
+
+**Note:** Ensure the backend is running on `http://localhost:8000` for full functionality.
 
 ## Using Makefile
 
@@ -55,21 +57,34 @@ npm run test:coverage
 ```
 frontend/
 ├── src/
-│   ├── App.jsx         # Main App component
-│   ├── App.css        # App styles
-│   ├── main.jsx       # Entry point
-│   ├── index.css      # Global styles
-│   └── assets/        # Static assets
-├── public/            # Public static files
-├── tests/             # Test files
-│   ├── setup.js       # Test setup
-│   └── App.test.jsx  # App tests
-├── index.html         # HTML entry point
-├── package.json       # Dependencies
-├── vite.config.js    # Vite configuration
-├── eslint.config.js   # ESLint configuration
-├── Makefile          # Development tasks
-└── .nvmrc            # Node.js version
+│   ├── api/
+│   │   └── client.js         # Axios client with interceptors
+│   ├── components/
+│   │   ├── LoginForm.jsx     # Login form component
+│   │   ├── Navbar.jsx        # Navigation bar
+│   │   ├── ItemList.jsx      # Items display component
+│   │   └── ProtectedRoute.jsx # Route guard component
+│   ├── pages/
+│   │   ├── Home.jsx         # Home page
+│   │   ├── Login.jsx        # Login page
+│   │   ├── Dashboard.jsx   # Protected dashboard
+│   │   └── Items.jsx        # Items management
+│   ├── services/
+│   │   └── api.js           # API service functions
+│   ├── store/
+│   │   └── useAuthStore.js  # Zustand auth store
+│   ├── App.jsx             # Main App with Router
+│   ├── App.css             # App styles
+│   ├── main.jsx            # Entry point
+│   └── index.css           # Global styles
+├── public/                  # Public static files
+├── tests/                   # Test files
+├── index.html               # HTML entry point
+├── package.json             # Dependencies
+├── vite.config.js          # Vite configuration
+├── eslint.config.js        # ESLint configuration
+├── Makefile                # Development tasks
+└── .nvmrc                 # Node.js version
 ```
 
 ## Scripts
@@ -99,10 +114,49 @@ const API_URL = import.meta.env.VITE_API_URL
 ## Features
 
 - **React 19** - Latest React with concurrent features
+- **React Router** - Client-side routing with protected routes
+- **Zustand** - Lightweight state management
+- **Axios** - HTTP client with interceptors
 - **Vite** - Fast build tool with HMR
 - **ESLint** - Code linting with React hooks rules
 - **Vitest** - Fast unit testing with React Testing Library
 - **StrictMode** - Enabled for development
+
+## Integration with Backend
+
+The frontend integrates with the following backend endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/auth/login` | POST | Login with username/password |
+| `/api/v1/health/` | GET | Backend health check |
+| `/api/v1/items/protected-items` | GET | Get protected items (requires JWT) |
+| `/api/v1/items/items` | POST | Create new item (requires JWT) |
+
+## Authentication Flow
+
+1. User navigates to `/login`
+2. User enters credentials
+3. Frontend calls `/api/v1/auth/login`
+4. Backend returns JWT token
+5. Frontend stores token in localStorage via Zustand
+6. Axios interceptor adds token to subsequent requests
+7. Protected routes redirect to login if not authenticated
+
+## Testing
+
+The project includes comprehensive tests:
+
+- **API Client** - Configuration tests
+- **Auth Store** - State management tests
+- **API Service** - API function tests
+- **Components** - Component existence tests
+- **Pages** - Page existence tests
+
+Run tests with:
+```bash
+npm test
+```
 
 ## License
 
