@@ -74,6 +74,18 @@ class TestJWTToken:
 class TestAuthEndpoints:
     """Test authentication endpoints."""
 
+    def test_decode_token_with_missing_subject(self):
+        """Test decoding a token with missing subject."""
+        from app.core.security import create_access_token, decode_access_token
+
+        # Create a token without 'sub' claim
+        token = create_access_token(data={})
+        decoded = decode_access_token(token)
+
+        # Token should be valid but have no subject
+        assert decoded is not None
+        assert decoded.get("sub") is None
+
     def test_login_success(self, client: TestClient):
         """Test successful login."""
         response = client.post(
@@ -102,6 +114,14 @@ class TestAuthEndpoints:
         )
         assert response.status_code == 401
         assert response.json()["detail"] == "Incorrect username or password"
+
+    def test_read_users_me(self, client: TestClient):
+        """Test reading current user info."""
+        response = client.get("/api/v1/auth/me")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["username"] == "admin"
+        assert data["email"] == "admin@example.com"
 
 
 class TestProtectedEndpoints:

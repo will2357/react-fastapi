@@ -123,6 +123,14 @@ async def root():
     return {"message": "Hello from FastAPI!"}
 
 
+@app.get("/test-app-exception")
+async def test_app_exception():
+    """Test endpoint that raises AppException with extra."""
+    from app.core.exceptions import AppException
+
+    raise AppException("Test error", status_code=400, extra={"test": "data"})
+
+
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 

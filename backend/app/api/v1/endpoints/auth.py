@@ -66,7 +66,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @router.get("/me", response_model=User)
-async def read_users_me(current_user: User = Depends()):
+async def read_users_me():
     """Get current authenticated user info.
 
     Note: This is a placeholder endpoint. The actual get_current_user
