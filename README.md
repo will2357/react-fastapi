@@ -6,6 +6,7 @@ A full-stack application with a Vite/React frontend and FastAPI backend, using n
 
 ```
 .
+├── Makefile                     # Root Makefile for full-stack commands
 ├── backend/                      # FastAPI Python backend
 │   ├── app/                      # Application package
 │   │   ├── __init__.py
@@ -121,6 +122,28 @@ make test-watch   # Run tests in watch mode
 make test-cov     # Run tests with coverage
 make lint         # Run ESLint
 make clean        # Clean build artifacts
+```
+
+### Root Makefile
+
+The root Makefile provides commands that work across both projects:
+
+```bash
+make help          # Show available commands
+make install       # Install all dependencies
+make install-be   # Install backend dependencies only
+make install-fe   # Install frontend dependencies only
+make dev          # Start both backend and frontend dev servers
+make dev-be       # Start backend dev server only
+make dev-fe       # Start frontend dev server only
+make test         # Run all tests
+make test-be      # Run backend tests only
+make test-fe      # Run frontend tests only
+make lint         # Run all linters
+make lint-be      # Run backend linter (ruff)
+make lint-fe      # Run frontend linter (ESLint)
+make clean        # Clean all cache/build files
+make stop         # Stop all running dev servers
 ```
 
 ## Testing
