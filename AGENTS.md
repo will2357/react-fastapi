@@ -39,7 +39,7 @@ npm run dev                         # Run dev server
 make dev                            # Or use Makefile
 
 npm run build                       # Production build
-npm test                           # Run unit tests
+npm test                           # Run tests
 npm run test:watch                 # Watch mode
 npm run test:coverage              # With coverage
 
@@ -47,10 +47,6 @@ npm run lint                       # ESLint
 npm run lint -- --fix              # Auto-fix
 make test-cov                     # Run tests with coverage
 make clean                         # Clean build artifacts
-
-# E2E tests (requires servers running on 8001 and 5174)
-npm run test:e2e                   # Run Playwright E2E tests
-make test-e2e                     # Or use Makefile
 ```
 
 ---
@@ -108,9 +104,8 @@ frontend/
 │   ├── store/           # Zustand stores
 │   ├── App.tsx         # Router
 │   └── main.tsx        # Entry
-├── tests/               # Test files (unit)
-├── tests/e2e/          # E2E tests (Playwright)
-├── Makefile, package.json, vite.config.ts, vitest.config.mts
+├── tests/               # Test files
+├── Makefile, package.json, vite.config.ts
 ```
 
 ---
@@ -149,12 +144,7 @@ Before creating a commit:
 3. **Run linters and fix any issues**:
    - Backend: `cd backend && make lint`
    - Frontend: `cd frontend && nvm use && make lint`
-4. **Run E2E tests (optional but recommended)**:
-   - Start backend on port 8001: `cd backend && source .venv/bin/activate && CORS_ORIGINS='["http://localhost:5174"]' SECRET_KEY='test-secret-key' python -m uvicorn app.main:app --port 8001 &`
-   - Start frontend on port 5174: `cd frontend && npm run test:server &`
-   - Run E2E: `cd frontend && nvm use && npm run test:e2e`
-   - Or use root Makefile: `make test-integration`
-5. **Update documentation** if the changes affect:
+4. **Update documentation** if the changes affect:
    - README.md (root)
    - backend/README.md
    - frontend/README.md
@@ -165,7 +155,7 @@ Before creating a commit:
 ## Dependencies
 
 - **Backend**: fastapi, uvicorn, pydantic, pydantic-settings, structlog, pyjwt, bcrypt, pytest, pytest-cov, ruff
-- **Frontend**: react, react-dom, react-router-dom, zustand, axios, vitest, @testing-library/react, eslint, @playwright/test
+- **Frontend**: react, react-dom, react-router-dom, zustand, axios, vitest, @testing-library/react, eslint
 
 ---
 

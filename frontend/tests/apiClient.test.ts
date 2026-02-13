@@ -1,14 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { InternalAxiosRequestConfig } from "axios";
-
-vi.mock("../src/api/client", async () => {
-  const actual = await vi.importActual("../src/api/client");
-  return {
-    ...actual,
-    API_URL: "http://localhost:8000",
-  };
-});
-
 import apiClient, { API_URL } from "../src/api/client";
 
 const mockSetItem = vi.fn();
@@ -37,10 +28,9 @@ describe("apiClient", () => {
     window.location.href = "";
   });
 
-  it("has correct base URL", () => {
-    expect(API_URL).toBeDefined();
-    expect(API_URL).toMatch(/^http:\/\/localhost:800\d$/);
-    expect(apiClient.defaults.baseURL).toBeDefined();
+  it("has correct base URL from environment", () => {
+    expect(API_URL).toBe("http://localhost:8000");
+    expect(apiClient.defaults.baseURL).toBe("http://localhost:8000");
   });
 
   it("has correct default headers", () => {

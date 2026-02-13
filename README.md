@@ -117,33 +117,6 @@ make test-watch
 make test-cov
 ```
 
-### Integration/E2E Tests
-
-E2E tests use Playwright with Chromium (headless). The tests automatically start both backend (port 8001) and frontend (port 5174) servers.
-
-```bash
-# Install Playwright browsers (one time only)
-make test-integration-install
-
-# Run E2E tests (requires manual server startup first)
-# First, start backend on port 8001:
-cd backend
-source .venv/bin/activate
-CORS_ORIGINS='["http://localhost:5174"]' SECRET_KEY='test-secret-key' \
-  python -m uvicorn app.main:app --port 8001 &
-
-# In another terminal, start frontend on port 5174:
-cd frontend
-npm run test:server &
-
-# Then run E2E tests:
-cd frontend
-npm run test:e2e
-
-# Or use root Makefile (handles server startup):
-make test-integration
-```
-
 ## Linting
 
 ### Backend
@@ -191,11 +164,9 @@ make lint-fix
     │   ├── store/              # Zustand stores
     │   ├── App.tsx             # Main app component
     │   └── main.tsx            # Entry point
-    ├── tests/                   # Test suite (unit)
-    ├── tests/e2e/               # E2E tests (Playwright)
+    ├── tests/                   # Test suite
     ├── Makefile                # Development tasks
     ├── package.json
-    ├── vitest.config.mts       # Vitest config
     └── README.md               # Frontend documentation
 ```
 
