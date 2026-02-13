@@ -74,6 +74,23 @@ API documentation is available at:
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
 
+### Testing
+
+The backend includes tests using pytest. Dev dependencies (including pytest) are automatically included when running with `uv`:
+
+```bash
+cd backend
+
+# Run all tests (dev dependencies included automatically)
+uv run pytest
+
+# Run tests with verbose output
+uv run pytest -v
+
+# Run a specific test file
+uv run pytest test_main.py
+```
+
 ### Frontend Development
 
 The frontend uses **nvm** for Node.js management and **npm** for packages:
@@ -141,6 +158,7 @@ uv sync
 - 🚀 **uv** - Ultra-fast Python package manager
 - 🔄 **Hot Reload** - Both frontend and backend support auto-reload during development
 - 🌐 **CORS** - Configured for local development
+- 🧪 **pytest** - Backend testing with pytest and FastAPI TestClient
 
 ## License
 
