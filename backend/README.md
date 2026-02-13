@@ -21,13 +21,15 @@ This project includes a Makefile for common development tasks:
 
 ```bash
 make help      # Show available commands
-make install   # Install dependencies
+make install   # Install dependencies (uv sync)
 make dev       # Run development server
+make build     # Build for production (no-op for Python)
 make test      # Run tests
 make test-cov  # Run tests with coverage
 make lint      # Run linter
 make lint-fix  # Fix linting issues
 make clean     # Clean cache files
+make run       # Run production server
 ```
 
 ## Running Tests
