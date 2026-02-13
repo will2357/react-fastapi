@@ -1,15 +1,15 @@
-# FastAPI Backend
+# Vite + React + FastAPI Full-Stack App
 
-A production-ready FastAPI backend with JWT authentication, structured logging, modular structure, middleware, and comprehensive error handling.
+A full-stack application with a Vite/React frontend and FastAPI backend.
 
 ## Prerequisites
 
 - **uv** - for managing Python and dependencies
-- **nvm** (Node Version Manager) - for managing Node.js (when frontend is added)
+- **nvm** (Node Version Manager) - for managing Node.js
 
 ## Quick Start
 
-### Start the Backend
+### 1. Start the Backend
 
 ```bash
 cd backend
@@ -26,7 +26,28 @@ make dev
 
 The backend will run on `http://localhost:8000`
 
-## Using Makefile
+### 2. Start the Frontend
+
+In a new terminal:
+
+```bash
+# Use the correct Node version
+nvm use
+
+cd frontend
+
+# Install dependencies (first time only)
+npm install
+
+# Run development server
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173`
+
+## Using Makefiles
+
+### Backend Makefile
 
 ```bash
 cd backend
@@ -41,7 +62,26 @@ make lint-fix  # Fix linting issues
 make clean     # Clean cache files
 ```
 
+### Frontend Makefile
+
+```bash
+cd frontend
+
+make help         # Show available commands
+make install      # Install npm dependencies
+make dev          # Run development server
+make build        # Build for production
+make test         # Run tests
+make test-watch   # Run tests in watch mode
+make test-cov     # Run tests with coverage
+make lint         # Run ESLint
+make lint-fix     # Fix ESLint issues
+make clean        # Clean build artifacts
+```
+
 ## Running Tests
+
+### Backend Tests
 
 ```bash
 cd backend
@@ -57,15 +97,34 @@ make test
 make test-cov
 ```
 
+### Frontend Tests
+
+```bash
+cd frontend
+
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+
+# Or use Makefile
+make test
+make test-watch
+make test-cov
+```
+
 ## Linting
+
+### Backend
 
 ```bash
 cd backend
 
-# Run ruff linter
 ruff check .
-
-# Fix auto-fixable issues
 ruff check --fix .
 
 # Or use Makefile
@@ -73,84 +132,67 @@ make lint
 make lint-fix
 ```
 
-## Middleware
+### Frontend
 
-The application includes several middleware components:
+```bash
+cd frontend
 
-### Request Timing Middleware
-- Adds `X-Process-Time` header to all responses
-- Measures request processing time in seconds
+npm run lint
+npm run lint:fix
 
-### Request Logging Middleware
-- Logs all incoming requests (method, path, client)
-- Logs all completed requests (method, path, status code)
-
-### Security Headers Middleware
-- Adds security headers to all responses:
-  - `X-Content-Type-Options: nosniff`
-  - `X-Frame-Options: DENY`
-  - `X-XSS-Protection: 1; mode=block`
-  - `Strict-Transport-Security`
-
-### Correlation ID Middleware
-- Adds unique correlation ID to each request for tracing
-- Header: `X-Correlation-ID`
-
-## Error Handling
-
-The application includes comprehensive error handling:
-
-### Custom Exceptions
-- `AppException` - Base exception with custom status codes
-- `NotFoundException` - 404 errors
-- `ValidationException` - 422 validation errors
-- `UnauthorizedException` - 401 authentication errors
-- `ForbiddenException` - 403 permission errors
-- `ConflictException` - 409 conflict errors
-
-### Global Exception Handlers
-- HTTPException handler for Starlette exceptions
-- RequestValidationError handler for Pydantic validation errors
-- Generic Exception handler with error IDs for unexpected errors
-
-### Error Response Format
-```json
-{
-  "detail": "Error message",
-  "error_id": "unique-error-id",
-  "timestamp": "2024-01-01T00:00:00Z"
-}
+# Or use Makefile
+make lint
+make lint-fix
 ```
 
 ## Project Structure
 
 ```
-backend/
-├── app/
-│   ├── main.py           # Application entry point
-│   ├── api/
-│   │   ├── deps.py      # Dependencies (auth, etc.)
-│   │   └── v1/
-│   │       ├── api.py   # Router aggregation
-│   │       └── endpoints/
-│   │           ├── auth.py    # Authentication (login)
-│   │           ├── health.py  # Health check
-│   │           └── items.py   # Items CRUD
-│   ├── core/
-│   │   ├── config.py    # Settings (pydantic-settings)
-│   │   ├── exceptions.py  # Custom exceptions
-│   │   ├── logging.py   # Structlog configuration
-│   │   ├── middleware.py  # Custom middleware
-│   │   └── security.py  # JWT & password utilities
-│   └── schemas/
-│       ├── auth.py      # Auth Pydantic models
-│       └── item.py      # Item Pydantic models
-├── tests/                # Test suite
-├── Makefile             # Development tasks
-└── pyproject.toml       # Project dependencies
+.
+├── backend/                      # FastAPI Python backend
+│   ├── app/                      # Application package
+│   │   ├── main.py               # FastAPI application entry point
+│   │   ├── api/                 # API routes and dependencies
+│   │   ├── core/                 # Core utilities
+│   │   └── schemas/              # Pydantic schemas
+│   ├── tests/                    # Test suite
+│   ├── Makefile                 # Development tasks
+│   └── pyproject.toml           # Project dependencies
+└── frontend/                    # Vite React frontend
+    ├── src/                     # React source files
+    │   ├── api/                # Axios client
+    │   ├── store/              # Zustand stores
+    │   ├── App.tsx             # Main app component
+    │   └── main.tsx            # Entry point
+    ├── tests/                   # Test suite
+    ├── Makefile                # Development tasks
+    ├── package.json
+    └── README.md               # Frontend documentation
 ```
 
+## Tech Stack
+
+### Backend
+- FastAPI
+- Pydantic
+- Structlog
+- JWT + bcrypt
+- pytest
+
+### Frontend
+- Vite
+- React 19
+- TypeScript
+- Tailwind CSS
+- Axios
+- Zustand
+- React Router
+- Vitest
+- ESLint
+
 ## API Endpoints
+
+### Backend
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
@@ -178,12 +220,6 @@ Response:
 }
 ```
 
-### Access Protected Route
-```bash
-curl http://localhost:8000/api/v1/items/protected-items \
-  -H "Authorization: Bearer <token>"
-```
-
 ### Mock Users
 
 | Username | Password |
@@ -192,6 +228,8 @@ curl http://localhost:8000/api/v1/items/protected-items \
 | user | user123 |
 
 ## Environment Variables
+
+### Backend
 
 Create `.env` in backend directory:
 
@@ -204,10 +242,10 @@ LOG_JSON_FORMAT=false
 SECRET_KEY="your-secret-key"
 ```
 
-## Testing
+### Frontend
 
-The project includes comprehensive tests with 97% code coverage:
-- Unit tests for utilities
-- Integration tests for API endpoints
-- Middleware tests
-- Error handling tests
+Create `.env` in frontend directory:
+
+```bash
+VITE_API_URL=http://localhost:8000
+```
