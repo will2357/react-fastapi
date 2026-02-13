@@ -53,7 +53,7 @@ describe("Login", () => {
     );
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
   });
 
   it("displays loading state when isLoading is true", () => {
@@ -77,8 +77,8 @@ describe("Login", () => {
         <Login />
       </BrowserRouter>
     );
-    expect(screen.getByText("Logging in...")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /logging in/i })).toBeDisabled();
+    expect(screen.getByText("Signing in...")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /signing in/i })).toBeDisabled();
   });
 
   it("displays error message when error exists in store", () => {
@@ -116,7 +116,7 @@ describe("Login", () => {
 
     await userEvent.type(screen.getByLabelText(/username/i), "wrong");
     await userEvent.type(screen.getByLabelText(/password/i), "wrong");
-    await userEvent.click(screen.getByRole("button", { name: /login/i }));
+    await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith("wrong", "wrong");
@@ -134,7 +134,7 @@ describe("Login", () => {
 
     await userEvent.type(screen.getByLabelText(/username/i), "admin");
     await userEvent.type(screen.getByLabelText(/password/i), "admin123");
-    await userEvent.click(screen.getByRole("button", { name: /login/i }));
+    await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith("admin", "admin123");

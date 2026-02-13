@@ -64,7 +64,7 @@ describe("Dashboard", () => {
       </BrowserRouter>
     );
 
-    await userEvent.click(screen.getByRole("button", { name: /logout/i }));
+    await userEvent.click(screen.getByRole("button", { name: /log out/i }));
 
     expect(mockLogout).toHaveBeenCalled();
   });
