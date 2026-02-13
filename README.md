@@ -42,12 +42,17 @@ A full-stack application with a Vite/React frontend and FastAPI backend, using n
 │   │           ├── test_health.py
 │   │           ├── test_items.py
 │   │           └── test_structure.py
-│   ├── .venv/                   # Python virtual environment (uv)
-│   └── pyproject.toml           # Project dependencies
+│   ├── Makefile                 # Development tasks
+│   ├── pyproject.toml           # Project dependencies
+│   └── README.md                # Backend documentation
 └── frontend/                    # Vite React frontend
     ├── src/                     # React source files
+    ├── tests/                   # Test suite
+    │   ├── setup.js            # Test setup
+    │   └── App.test.jsx        # Component tests
+    ├── Makefile                # Development tasks
     ├── package.json
-    └── ...
+    └── README.md               # Frontend documentation
 ```
 
 ## Prerequisites
@@ -63,6 +68,9 @@ A full-stack application with a Vite/React frontend and FastAPI backend, using n
 cd backend
 source .venv/bin/activate
 python -m app.main
+
+# Or use Makefile
+make dev
 ```
 
 The backend will run on `http://localhost:8000`
@@ -85,32 +93,39 @@ npm run dev
 
 The frontend will run on `http://localhost:5173`
 
-## Development
+## Using Makefiles
 
-### Backend Development
-
-The backend uses **uv** for Python package management:
+### Backend Makefile
 
 ```bash
 cd backend
-
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Install additional packages
-uv add <package-name>
-
-# Run the development server with auto-reload
-uvicorn app.main:app --reload
+make help      # Show available commands
+make install   # Sync dependencies
+make dev       # Run development server
+make test      # Run tests
+make test-cov  # Run tests with coverage
+make lint      # Run linter
+make clean     # Clean cache files
 ```
 
-API documentation is available at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+### Frontend Makefile
 
-### Testing
+```bash
+cd frontend
+make help         # Show available commands
+make install      # Install npm dependencies
+make dev          # Run development server
+make build        # Build for production
+make test         # Run tests
+make test-watch   # Run tests in watch mode
+make test-cov     # Run tests with coverage
+make lint         # Run ESLint
+make clean        # Clean build artifacts
+```
 
-The backend includes tests using pytest:
+## Testing
+
+### Backend Tests
 
 ```bash
 cd backend
@@ -118,51 +133,55 @@ cd backend
 # Run all tests
 python -m pytest -v
 
-# Run a specific test file
-python -m pytest tests/test_auth.py -v
-
 # Run with coverage
 python -m pytest --cov=app tests/
+
+# Or use Makefile
+make test
+make test-cov
 ```
 
-### Frontend Development
-
-The frontend uses **nvm** for Node.js management and **npm** for packages:
+### Frontend Tests
 
 ```bash
 cd frontend
 
-# Install dependencies
-npm install
+# Run all tests
+npm test
 
-# Run development server
-npm run dev
+# Run tests in watch mode
+npm run test:watch
 
-# Build for production
-npm run build
+# Run tests with coverage
+npm run test:coverage
 
-# Preview production build
-npm run preview
+# Or use Makefile
+make test
+make test-watch
+make test-cov
 ```
 
 ## Environment Variables
 
-Create a `.env` file in the `backend/` directory to override default settings:
+### Backend
+
+Create a `.env` file in the `backend/` directory:
 
 ```bash
-# Backend Settings
 PROJECT_NAME="FastAPI Backend"
 API_V1_STR="/api/v1"
-
-# CORS
 CORS_ORIGINS=["http://localhost:5173"]
-
-# Logging
 LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
-
-# Security (JWT)
 SECRET_KEY="your-secret-key-change-in-production"
+```
+
+### Frontend
+
+Create a `.env` file in the `frontend/` directory:
+
+```bash
+VITE_API_URL=http://localhost:8000
 ```
 
 ## API Endpoints
@@ -193,7 +212,6 @@ SECRET_KEY="your-secret-key-change-in-production"
 ### Login
 
 ```bash
-# Login with username and password
 curl -X POST http://localhost:8000/api/v1/auth/login \
   -d "username=admin&password=admin123"
 ```
@@ -209,7 +227,6 @@ Response:
 ### Access Protected Endpoint
 
 ```bash
-# Use the access token to access protected endpoints
 curl -X GET http://localhost:8000/api/v1/items/protected-items \
   -H "Authorization: Bearer <your-access-token>"
 ```
@@ -226,7 +243,7 @@ For development, the following mock users are available:
 ## Features
 
 - **Vite** - Lightning fast frontend build tool
-- **React** - Modern UI library with hooks
+- **React 19** - Modern UI library with hooks
 - **FastAPI** - High-performance Python web framework
 - **Pydantic** - Data validation using Python type annotations
 - **JWT Authentication** - Secure token-based auth with bcrypt password hashing
@@ -237,6 +254,7 @@ For development, the following mock users are available:
 - **Hot Reload** - Both frontend and backend support auto-reload during development
 - **CORS** - Configured for local development
 - **pytest** - Comprehensive backend testing
+- **Vitest** - Fast frontend testing with React Testing Library
 
 ## License
 

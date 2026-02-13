@@ -1,16 +1,109 @@
-# React + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React 19 frontend application built with Vite.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Node.js** 24.x (managed via nvm)
+- **npm** (comes with Node.js)
 
-## React Compiler
+## Quick Start
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Install dependencies
+npm install
 
-## Expanding the ESLint configuration
+# Run development server
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The app will run on `http://localhost:5173`
+
+## Using Makefile
+
+This project includes a Makefile for common development tasks:
+
+```bash
+make help          # Show available commands
+make install       # Install npm dependencies
+make dev           # Run development server
+make build         # Build for production
+make preview       # Preview production build
+make test          # Run tests
+make test-watch    # Run tests in watch mode
+make test-cov      # Run tests with coverage
+make lint          # Run ESLint
+make lint-fix      # Fix ESLint issues
+make clean         # Clean build artifacts
+```
+
+## Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+## Project Structure
+
+```
+frontend/
+├── src/
+│   ├── App.jsx         # Main App component
+│   ├── App.css        # App styles
+│   ├── main.jsx       # Entry point
+│   ├── index.css      # Global styles
+│   └── assets/        # Static assets
+├── public/            # Public static files
+├── tests/             # Test files
+│   ├── setup.js       # Test setup
+│   └── App.test.jsx  # App tests
+├── index.html         # HTML entry point
+├── package.json       # Dependencies
+├── vite.config.js    # Vite configuration
+├── eslint.config.js   # ESLint configuration
+├── Makefile          # Development tasks
+└── .nvmrc            # Node.js version
+```
+
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server with HMR |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run tests |
+| `npm run test:watch` | Run tests in watch mode |
+
+## Environment Variables
+
+Create a `.env` file in the frontend directory:
+
+```bash
+VITE_API_URL=http://localhost:8000
+```
+
+Then use in code:
+```javascript
+const API_URL = import.meta.env.VITE_API_URL
+```
+
+## Features
+
+- **React 19** - Latest React with concurrent features
+- **Vite** - Fast build tool with HMR
+- **ESLint** - Code linting with React hooks rules
+- **Vitest** - Fast unit testing with React Testing Library
+- **StrictMode** - Enabled for development
+
+## License
+
+MIT
