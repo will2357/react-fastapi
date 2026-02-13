@@ -15,6 +15,19 @@ python -m app.main
 uvicorn app.main:app --reload
 ```
 
+## Using Makefile
+
+This project includes a Makefile for common development tasks:
+
+```bash
+make help    # Show available commands
+make install # Install dependencies
+make dev     # Run development server
+make test    # Run tests
+make lint    # Run linter
+make clean   # Clean cache files
+```
+
 ## Running Tests
 
 ```bash
@@ -23,6 +36,24 @@ python -m pytest -v
 
 # Run with coverage
 python -m pytest --cov=app tests/
+
+# Or use Makefile
+make test
+make test-cov
+```
+
+## Linting
+
+```bash
+# Run ruff linter
+ruff check .
+
+# Fix auto-fixable issues
+ruff check --fix .
+
+# Or use Makefile
+make lint
+make lint-fix
 ```
 
 ## Project Structure
