@@ -27,6 +27,8 @@ const useAuthStore = create(
         set({ isLoading: true, error: null });
         try {
           const result = await loginFn();
+          localStorage.setItem('token', result.access_token);
+          localStorage.setItem('user', JSON.stringify({ username: 'admin' }));
           set({
             token: result.access_token,
             user: { username: 'admin' },
