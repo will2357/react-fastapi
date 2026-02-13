@@ -92,4 +92,46 @@ describe("useAuthStore", () => {
 
     expect(state.error).toBeNull();
   });
+
+  it("throws error and sets error message on failed login (non-ok response)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+    } as Response);
+
+    const { default: useAuthStore } = await import("../src/store/useAuthStore");
+    const { login } = useAuthStore.getState();
+
+    await expect(login("admin", "wrongpassword")).rejects.toThrow("Invalid username or password");
+
+    const state = useAuthStore.getState();
+    expect(state.error).toBe("Invalid username or password");
+    expect(state.isLoading).toBe(false);
+  });
+
+  it("throws error and sets error message on network failure", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(new Error("Network error"));
+
+    const { default: useAuthStore } = await import("../src/store/useAuthStore");
+    const { login } = useAuthStore.getState();
+
+    await expect(login("admin", "admin123")).rejects.toThrow("Network error");
+
+    const state = useAuthStore.getState();
+    expect(state.error).toBe("Network error");
+    expect(state.isLoading).toBe(false);
+  });
+
+  it("sets generic error message on non-Error exception", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce("string error");
+
+    const { default: useAuthStore } = await import("../src/store/useAuthStore");
+    const { login } = useAuthStore.getState();
+
+    await expect(login("admin", "admin123")).rejects.toEqual("string error");
+
+    const state = useAuthStore.getState();
+    expect(state.error).toBe("Login failed");
+    expect(state.isLoading).toBe(false);
+  });
 });
