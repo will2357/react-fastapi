@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import App from "../src/App";
 
@@ -12,12 +12,12 @@ describe("App", () => {
     );
   });
 
-  it("displays welcome message", () => {
-    const { getByText } = render(
+  it("shows login page when not authenticated", () => {
+    render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     );
-    expect(getByText("Welcome")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /login/i })).toBeInTheDocument();
   });
 });
