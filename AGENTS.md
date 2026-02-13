@@ -21,6 +21,7 @@ python -m pytest --cov=app --cov-report=term-missing tests/  # With coverage
 
 ruff check .                         # Lint
 ruff check --fix .                   # Auto-fix
+make test-cov                       # Run tests with coverage
 make clean                           # Clean cache
 ```
 
@@ -39,12 +40,12 @@ make dev                            # Or use Makefile
 
 npm run build                       # Production build
 npm test                           # Run tests
-npm test -- tests/store.test.jsx   # Single test file
 npm run test:watch                 # Watch mode
 npm run test:coverage              # With coverage
 
 npm run lint                       # ESLint
 npm run lint -- --fix              # Auto-fix
+make test-cov                     # Run tests with coverage
 make clean                         # Clean build artifacts
 ```
 
@@ -100,12 +101,11 @@ frontend/
 │   ├── api/              # Axios client
 │   ├── components/       # Reusable components
 │   ├── pages/           # Page components
-│   ├── services/        # API services
 │   ├── store/           # Zustand stores
-│   ├── App.jsx         # Router
-│   └── main.jsx        # Entry
+│   ├── App.tsx         # Router
+│   └── main.tsx        # Entry
 ├── tests/               # Test files
-├── Makefile, package.json, vite.config.js
+├── Makefile, package.json, vite.config.ts
 ```
 
 ---
@@ -127,9 +127,26 @@ SECRET_KEY="your-secret-key"
 
 ## Testing Requirements
 
-- All new features need tests
+- **All new features need tests**
 - Backend: >90% coverage target
-- Run tests before committing: `make test` (backend) / `npm test` (frontend)
+- Tests must pass before committing (see Pre-Commit Requirements)
+
+---
+
+## Pre-Commit Requirements
+
+Before creating a commit:
+1. **Run all tests and ensure they pass**:
+   - Backend: `cd backend && make test`
+   - Frontend: `cd frontend && nvm use && make test`
+2. **Run linters and fix any issues**:
+   - Backend: `cd backend && make lint`
+   - Frontend: `cd frontend && nvm use && make lint`
+3. **Update documentation** if the changes affect:
+   - README.md (root)
+   - backend/README.md
+   - frontend/README.md
+   - AGENTS.md (if process/tasks change)
 
 ---
 
