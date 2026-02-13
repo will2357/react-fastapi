@@ -1,24 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Dashboard from "../src/pages/Dashboard";
+import useAuthStore from "../src/store/useAuthStore";
+
+const mockLogout = vi.fn();
 
 vi.mock("../src/store/useAuthStore", () => ({
   default: vi.fn(),
 }));
 
-import useAuthStore from "../src/store/useAuthStore";
-
-const mockLogout = vi.fn();
-
-vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
-  return {
-    ...actual,
-    useNavigate: vi.fn(() => vi.fn()),
-  };
-});
+type MockAuthStore = ReturnType<typeof useAuthStore>;
 
 describe("Dashboard", () => {
   beforeEach(() => {
@@ -26,7 +19,7 @@ describe("Dashboard", () => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { username: "admin" },
       logout: mockLogout,
-    } as any);
+    } as MockAuthStore);
   });
 
   it("renders welcome message with username", () => {
@@ -53,7 +46,7 @@ describe("Dashboard", () => {
     vi.mocked(useAuthStore).mockReturnValue({
       user: { username: "testuser" },
       logout: mockLogout,
-    } as any);
+    } as MockAuthStore);
 
     render(
       <BrowserRouter>

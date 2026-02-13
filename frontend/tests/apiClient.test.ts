@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { InternalAxiosRequestConfig } from "axios";
 import apiClient, { API_URL } from "../src/api/client";
 
 const mockSetItem = vi.fn();
@@ -40,9 +41,9 @@ describe("apiClient", () => {
     mockGetItem.mockReturnValue("mock-token");
 
     const mockRequestInterceptor = apiClient.interceptors.request.handlers[0];
-    const config = { headers: {} };
+    const config: InternalAxiosRequestConfig = { headers: {} };
     
-    await mockRequestInterceptor.fulfilled(config as any);
+    await mockRequestInterceptor.fulfilled(config);
     
     expect(config.headers).toHaveProperty("Authorization", "Bearer mock-token");
   });
@@ -51,9 +52,9 @@ describe("apiClient", () => {
     mockGetItem.mockReturnValue(null);
 
     const mockRequestInterceptor = apiClient.interceptors.request.handlers[0];
-    const config = { headers: {} };
+    const config: InternalAxiosRequestConfig = { headers: {} };
     
-    await mockRequestInterceptor.fulfilled(config as any);
+    await mockRequestInterceptor.fulfilled(config);
     
     expect(config.headers).not.toHaveProperty("Authorization");
   });

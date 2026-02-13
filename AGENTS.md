@@ -129,6 +129,7 @@ SECRET_KEY="your-secret-key"
 
 - **All new features need tests**
 - Backend: >90% coverage target
+- Frontend: >90% coverage target
 - Tests must pass before committing (see Pre-Commit Requirements)
 
 ---
