@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import App from '../src/App';
-import useAuthStore, { type User } from '../src/store/useAuthStore';
+import useAuthStore from '../src/store/useAuthStore';
 
 vi.mock('../src/store/useAuthStore', () => ({
   default: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('../src/services/api', () => ({
 
 describe('App', () => {
   beforeEach(() => {
-    (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       isAuthenticated: false,
       user: null,
       logout: vi.fn(),

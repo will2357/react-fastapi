@@ -1,4 +1,3 @@
-import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -6,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Home from '../src/pages/Home';
 import Dashboard from '../src/pages/Dashboard';
 import Items from '../src/pages/Items';
-import type { HealthResponse, Item } from '../src/services/api';
+import type { HealthResponse } from '../src/services/api';
 import type { User } from '../src/store/useAuthStore';
 
 vi.mock('../src/services/api', () => ({
@@ -30,7 +29,7 @@ import useAuthStore from '../src/store/useAuthStore';
 describe('Pages', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       user: { username: 'admin' } as User,
       isAuthenticated: true,
     });
@@ -114,7 +113,7 @@ describe('Pages', () => {
 
   describe('Dashboard', () => {
     it('renders dashboard with user welcome message', async () => {
-      (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
+      (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
         user: { username: 'testuser' } as User,
       });
 
@@ -145,7 +144,7 @@ describe('Pages', () => {
     });
 
     it('handles null user gracefully', async () => {
-      (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
+      (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
         user: null,
       });
 
