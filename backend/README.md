@@ -136,7 +136,7 @@ app/
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | GET | `/` | No | Welcome message |
-| GET | `/api/v1/health` | No | Health check |
+| GET | `/api/v1/health/` | No | Health check |
 | POST | `/api/v1/auth/login` | No | Get JWT token |
 | GET | `/api/v1/auth/me` | No | Get current user |
 | GET | `/api/v1/items/{id}` | No | Get item |

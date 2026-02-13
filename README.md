@@ -214,7 +214,7 @@ VITE_API_URL=http://localhost:8000
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/` | Root endpoint - returns welcome message |
-| GET | `/api/v1/health` | Health check endpoint |
+| GET | `/api/v1/health/` | Health check endpoint |
 | POST | `/api/v1/auth/login` | Login to get JWT token |
 
 ### Authenticated Endpoints

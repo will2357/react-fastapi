@@ -27,7 +27,7 @@ class TestMiddleware:
     def test_request_logging(self, client: TestClient, caplog):
         """Test that requests are logged."""
         caplog.set_level("INFO")
-        response = client.get("/api/v1/health/health")
+        response = client.get("/api/v1/health/")
         assert response.status_code == 200
 
     def test_middleware_order(self, client: TestClient):
