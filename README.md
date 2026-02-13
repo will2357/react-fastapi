@@ -9,7 +9,7 @@ A full-stack application with a Vite/React frontend and FastAPI backend, using n
 ├── backend/          # FastAPI Python backend
 │   ├── .venv/       # Python virtual environment (created by uv)
 │   ├── main.py      # FastAPI application entry point
-│   └── requirements.txt
+│   └── pyproject.toml
 └── frontend/         # Vite React frontend
     ├── src/         # React source files
     ├── package.json
@@ -64,10 +64,7 @@ cd backend
 source .venv/bin/activate
 
 # Install additional packages
-uv pip install <package-name>
-
-# Update requirements.txt after installing packages
-uv pip freeze > requirements.txt
+uv add <package-name>
 
 # Run the development server with auto-reload
 uvicorn main:app --reload
@@ -129,8 +126,8 @@ cd backend
 # Activate it:
 source .venv/bin/activate
 
-# Install from requirements.txt
-uv pip install -r requirements.txt
+# Sync dependencies from pyproject.toml
+uv sync
 
 # All packages are managed by uv automatically
 ```
