@@ -1,4 +1,4 @@
-.PHONY: help install dev build test test-watch test-cov lint lint-fix clean
+.PHONY: help install dev build test test-cov lint lint-fix clean run
 
 help:
 	@echo "Available commands:"
@@ -6,11 +6,11 @@ help:
 	@echo "  make dev          - Run development server"
 	@echo "  make build        - Build for production"
 	@echo "  make test         - Run tests"
-	@echo "  make test-watch   - Run tests in watch mode"
 	@echo "  make test-cov     - Run tests with coverage"
 	@echo "  make lint         - Run ESLint"
 	@echo "  make lint-fix     - Fix ESLint issues"
 	@echo "  make clean        - Clean build artifacts"
+	@echo "  make run          - Run production server"
 
 install:
 	npm install
@@ -24,10 +24,7 @@ build:
 test:
 	npm test
 
-test-watch:
-	npm run test:watch
-
-test-coverage:
+test-cov:
 	npm run test:coverage
 
 lint:
@@ -38,3 +35,6 @@ lint-fix:
 
 clean:
 	rm -rf dist coverage node_modules/.vite
+
+run:
+	npm run preview

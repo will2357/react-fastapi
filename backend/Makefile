@@ -1,9 +1,10 @@
-.PHONY: help install dev test test-cov lint lint-fix clean run
+.PHONY: help install dev build test test-cov lint lint-fix clean run
 
 help:
 	@echo "Available commands:"
 	@echo "  make install    - Sync Python dependencies (uv sync)"
 	@echo "  make dev        - Run development server (uvicorn with reload)"
+	@echo "  make build      - Build for production (no-op for Python)"
 	@echo "  make test       - Run all tests"
 	@echo "  make test-cov   - Run tests with coverage report"
 	@echo "  make lint       - Run ruff linter"
@@ -16,6 +17,9 @@ install:
 
 dev:
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+build:
+	@echo "No build step required for Python"
 
 test:
 	python -m pytest -v
