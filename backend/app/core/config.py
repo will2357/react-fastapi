@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = ["http://localhost:5173"]
     LOG_LEVEL: str = "INFO"
     LOG_JSON_FORMAT: bool = False
+    SECRET_KEY: str = "your-secret-key-change-in-production"
 
 
 settings = Settings()

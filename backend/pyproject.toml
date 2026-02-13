@@ -13,6 +13,8 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "structlog>=24.0.0",
     "asgi-correlation-id>=4.0.0",
+    "pyjwt>=2.8.0",
+    "bcrypt>=4.0.0",
 ]
 
 [dependency-groups]
