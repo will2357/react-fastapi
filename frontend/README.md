@@ -1,6 +1,6 @@
 # Frontend
 
-A React 19 frontend application integrated with FastAPI backend, built with Vite.
+A React 19 frontend application integrated with FastAPI backend, built with Vite and TypeScript.
 
 ## Prerequisites
 
@@ -58,24 +58,24 @@ npm run test:coverage
 frontend/
 ├── src/
 │   ├── api/
-│   │   └── client.js         # Axios client with interceptors
+│   │   └── client.ts         # Axios client with interceptors
 │   ├── components/
-│   │   ├── LoginForm.jsx     # Login form component
-│   │   ├── Navbar.jsx        # Navigation bar
-│   │   ├── ItemList.jsx      # Items display component
-│   │   └── ProtectedRoute.jsx # Route guard component
+│   │   ├── LoginForm.tsx     # Login form component
+│   │   ├── Navbar.tsx        # Navigation bar
+│   │   ├── ItemList.tsx      # Items display component
+│   │   └── ProtectedRoute.tsx # Route guard component
 │   ├── pages/
-│   │   ├── Home.jsx         # Home page
-│   │   ├── Login.jsx        # Login page
-│   │   ├── Dashboard.jsx   # Protected dashboard
-│   │   └── Items.jsx        # Items management
+│   │   ├── Home.tsx         # Home page
+│   │   ├── Login.tsx        # Login page
+│   │   ├── Dashboard.tsx   # Protected dashboard
+│   │   └── Items.tsx        # Items management
 │   ├── services/
-│   │   └── api.js           # API service functions
+│   │   └── api.ts           # API service functions
 │   ├── store/
-│   │   └── useAuthStore.js  # Zustand auth store
-│   ├── App.jsx             # Main App with Router
+│   │   └── useAuthStore.ts  # Zustand auth store
+│   ├── App.tsx             # Main App with Router
 │   ├── App.css             # App styles
-│   ├── main.jsx            # Entry point
+│   ├── main.tsx            # Entry point
 │   └── index.css           # Global styles
 ├── public/                  # Public static files
 ├── tests/                   # Test files
@@ -114,6 +114,7 @@ const API_URL = import.meta.env.VITE_API_URL
 ## Features
 
 - **React 19** - Latest React with concurrent features
+- **TypeScript** - Type-safe frontend code
 - **React Router** - Client-side routing with protected routes
 - **Zustand** - Lightweight state management
 - **Axios** - HTTP client with interceptors

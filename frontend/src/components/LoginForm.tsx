@@ -2,19 +2,23 @@ import { useState } from 'react';
 import useAuthStore from '../store/useAuthStore';
 import * as api from '../services/api';
 
-function LoginForm({ onSuccess }) {
+interface LoginFormProps {
+  onSuccess?: () => void;
+}
+
+function LoginForm({ onSuccess }: LoginFormProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error, clearError } = useAuthStore();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
     
     try {
       await login(() => api.login(username, password));
       if (onSuccess) onSuccess();
-    } catch (err) {
+    } catch {
       // Error is handled by the store
     }
   };

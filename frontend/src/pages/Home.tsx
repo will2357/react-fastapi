@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getHealth } from '../services/api';
 
 function Home() {
-  const [backendStatus, setBackendStatus] = useState(null);
+  const [backendStatus, setBackendStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

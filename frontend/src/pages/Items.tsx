@@ -2,12 +2,11 @@ import { useState } from 'react';
 import * as api from '../services/api';
 
 function Items() {
-  const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({ name: '', price: '' });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -20,7 +19,7 @@ function Items() {
       alert(result.message);
       setNewItem({ name: '', price: '' });
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'Failed to create item');
     } finally {
       setLoading(false);
     }

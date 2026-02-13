@@ -1,6 +1,6 @@
 # AGENTS.md - Development Guidelines for AI Agents
 
-Full-stack app: FastAPI backend (Python 3.14+) + React 19 frontend (Vite, JSDoc). Package managers: uv (backend), npm (frontend).
+Full-stack app: FastAPI backend (Python 3.14+) + React 19 frontend (Vite, TypeScript). Package managers: uv (backend), npm (frontend).
 
 ---
 
@@ -67,7 +67,7 @@ make clean                         # Clean build artifacts
 
 - **Imports**: Absolute from `@/` (e.g., `import { api } from '@/api/client'`), grouped: external, internal, styles
 - **Formatting**: Max 100 chars, ESLint + Prettier
-- **Types**: JSDoc comments (e.g., `/** @type {string} */`)
+- **Types**: TypeScript (e.g., `const name: string`)
 - **Naming**: `PascalCase` (components), `camelCase` (hooks with `use` prefix, functions/vars), `UPPER_SNAKE_CASE` (constants)
 - **React**: Functional components with hooks, small focused components, Zustand for state, React Router, handle loading/error states
 - **Error handling**: try/catch for async, user-friendly messages, console.log in dev

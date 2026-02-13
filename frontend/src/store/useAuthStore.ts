@@ -1,9 +1,28 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, StateStorage } from 'zustand/middleware';
 
-const useAuthStore = create(
+export interface User {
+  username: string;
+}
+
+interface AuthState {
+  token: string | null;
+  user: User | null;
+  isAuthenticated: boolean;
+  error: string | null;
+  isLoading: boolean;
+  isHydrated: boolean;
+  setHydrated: () => void;
+  setToken: (token: string | null) => void;
+  setUser: (user: User | null) => void;
+  login: (loginFn: () => Promise<{ access_token: string }>) => Promise<{ access_token: string }>;
+  logout: () => void;
+  clearError: () => void;
+}
+
+const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       token: null,
       user: null,
       isAuthenticated: false,
@@ -38,7 +57,7 @@ const useAuthStore = create(
           return result;
         } catch (error) {
           set({
-            error: error.message || 'Login failed',
+            error: error instanceof Error ? error.message : 'Login failed',
             isLoading: false,
           });
           throw error;

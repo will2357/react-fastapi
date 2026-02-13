@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import * as api from '../services/api';
 
 function ItemList() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -12,7 +12,7 @@ function ItemList() {
         const data = await api.getProtectedItems();
         setItems(data.items || []);
       } catch (err) {
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
