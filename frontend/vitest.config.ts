@@ -15,11 +15,15 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
   },
   coverage: {
+    provider: "v8",
     exclude: [
       "src/main.tsx",
       "src/vite-env.d.ts",
       "tests/**",
-      "**/*.config.{ts,js}",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "tailwind.config.js",
+      "postcss.config.js",
     ],
   },
 });

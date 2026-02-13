@@ -13,7 +13,7 @@ const mockClearError = vi.fn();
 vi.mocked(useAuthStore).mockReturnValue({
   login: mockLogin,
   isLoading: false,
-  error: null,
+  error: "Invalid username or password",
   clearError: mockClearError,
   token: null,
   user: null,
@@ -31,6 +31,21 @@ describe("Login", () => {
   });
 
   it("renders login form", () => {
+    vi.mocked(useAuthStore).mockReturnValue({
+      login: mockLogin,
+      isLoading: false,
+      error: null,
+      clearError: mockClearError,
+      token: null,
+      user: null,
+      isAuthenticated: false,
+      isHydrated: true,
+      setToken: vi.fn(),
+      setUser: vi.fn(),
+      setHydrated: vi.fn(),
+      logout: vi.fn(),
+    } as ReturnType<typeof useAuthStore>);
+
     render(
       <BrowserRouter>
         <Login />
@@ -39,6 +54,55 @@ describe("Login", () => {
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
+  });
+
+  it("displays loading state when isLoading is true", () => {
+    vi.mocked(useAuthStore).mockReturnValue({
+      login: mockLogin,
+      isLoading: true,
+      error: null,
+      clearError: mockClearError,
+      token: null,
+      user: null,
+      isAuthenticated: false,
+      isHydrated: true,
+      setToken: vi.fn(),
+      setUser: vi.fn(),
+      setHydrated: vi.fn(),
+      logout: vi.fn(),
+    } as ReturnType<typeof useAuthStore>);
+
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>
+    );
+    expect(screen.getByText("Logging in...")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /logging in/i })).toBeDisabled();
+  });
+
+  it("displays error message when error exists in store", () => {
+    vi.mocked(useAuthStore).mockReturnValue({
+      login: mockLogin,
+      isLoading: false,
+      error: "Invalid username or password",
+      clearError: mockClearError,
+      token: null,
+      user: null,
+      isAuthenticated: false,
+      isHydrated: true,
+      setToken: vi.fn(),
+      setUser: vi.fn(),
+      setHydrated: vi.fn(),
+      logout: vi.fn(),
+    } as ReturnType<typeof useAuthStore>);
+
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>
+    );
+    expect(screen.getByText("Invalid username or password")).toBeInTheDocument();
   });
 
   it("shows error message when login fails", async () => {

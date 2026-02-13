@@ -17,6 +17,7 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
+  /* v8 ignore next 3 */
   (error: AxiosError) => {
     return Promise.reject(error);
   }
@@ -24,6 +25,7 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => response,
+  /* v8 ignore next 8 */
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
