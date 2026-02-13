@@ -1,6 +1,5 @@
 """Test authentication and JWT functionality."""
 
-import pytest
 from fastapi.testclient import TestClient
 
 from app.core.security import (

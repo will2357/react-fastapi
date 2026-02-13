@@ -1,6 +1,5 @@
 """Test custom exception handling."""
 
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 

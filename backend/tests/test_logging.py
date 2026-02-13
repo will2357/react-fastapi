@@ -1,8 +1,6 @@
 """Test logging configuration."""
 
-import logging
 
-import structlog
 
 from app.core.logging import configure_logging, get_logger
 

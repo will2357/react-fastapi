@@ -34,7 +34,7 @@ def test_directory_structure_exists():
 def test_imports_work():
     """Verify all modules can be imported."""
     from app.core.config import Settings, settings
-    from app.schemas.item import ItemBase, ItemCreate, ItemResponse
+    from app.schemas.item import ItemResponse
 
     # Verify Settings can be instantiated
     assert isinstance(settings, Settings)

@@ -1,13 +1,13 @@
 """FastAPI application entry point with refactored structure."""
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from asgi_correlation_id import CorrelationIdMiddleware
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.v1.api import api_router
@@ -112,7 +112,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
         content={
             "detail": "An unexpected error occurred",
             "error_id": error_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         },
     )
 

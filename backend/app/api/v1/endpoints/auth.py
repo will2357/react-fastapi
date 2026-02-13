@@ -12,7 +12,7 @@ from app.core.security import (
     get_password_hash,
     verify_password,
 )
-from app.schemas.auth import Token, User, UserLogin
+from app.schemas.auth import Token, User
 
 router = APIRouter()
 logger = get_logger(__name__)

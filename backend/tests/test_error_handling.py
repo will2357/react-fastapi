@@ -2,7 +2,6 @@
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.core.exceptions import (
     AppException,
@@ -12,7 +11,6 @@ from app.core.exceptions import (
     UnauthorizedException,
     ValidationException,
 )
-from app.main import app
 
 
 class TestErrorHandling:
