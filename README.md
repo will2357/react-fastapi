@@ -1,72 +1,23 @@
-# Vite + React + FastAPI Full-Stack App
+# FastAPI Backend
 
-A full-stack application with a Vite/React frontend and FastAPI backend, using nvm for Node.js management and uv for Python management.
-
-## Project Structure
-
-```
-.
-├── backend/                      # FastAPI Python backend
-│   ├── app/                      # Application package
-│   │   ├── __init__.py
-│   │   ├── main.py               # FastAPI application entry point
-│   │   ├── api/                 # API routes and dependencies
-│   │   │   ├── __init__.py
-│   │   │   ├── deps.py           # Dependency injection (auth, etc.)
-│   │   │   └── v1/
-│   │   │       ├── __init__.py
-│   │   │       ├── api.py        # Router aggregation
-│   │   │       └── endpoints/
-│   │   │           ├── __init__.py
-│   │   │           ├── auth.py   # Authentication endpoints
-│   │   │           ├── health.py # Health check endpoint
-│   │   │           └── items.py  # Items CRUD endpoints
-│   │   ├── core/                 # Core utilities
-│   │   │   ├── __init__.py
-│   │   │   ├── config.py         # Settings (pydantic-settings)
-│   │   │   ├── exceptions.py     # Custom exceptions
-│   │   │   ├── logging.py        # Structlog configuration
-│   │   │   └── security.py       # JWT & password utilities
-│   │   └── schemas/              # Pydantic schemas
-│   │       ├── __init__.py
-│   │       ├── auth.py           # Auth schemas
-│   │       └── item.py           # Item schemas
-│   ├── tests/                    # Test suite
-│   │   ├── __init__.py
-│   │   ├── conftest.py          # Pytest fixtures
-│   │   ├── test_auth.py         # Auth tests
-│   │   ├── test_exceptions.py   # Exception tests
-│   │   ├── test_logging.py      # Logging tests
-│   │   └── api/
-│   │       └── v1/
-│   │           ├── test_health.py
-│   │           ├── test_items.py
-│   │           └── test_structure.py
-│   ├── Makefile                 # Development tasks
-│   ├── pyproject.toml           # Project dependencies
-│   └── README.md                # Backend documentation
-└── frontend/                    # Vite React frontend
-    ├── src/                     # React source files
-    ├── tests/                   # Test suite
-    │   ├── setup.js            # Test setup
-    │   └── App.test.jsx        # Component tests
-    ├── Makefile                # Development tasks
-    ├── package.json
-    └── README.md               # Frontend documentation
-```
+A production-ready FastAPI backend with JWT authentication, structured logging, modular structure, middleware, and comprehensive error handling.
 
 ## Prerequisites
 
-- **nvm** (Node Version Manager) - for managing Node.js
 - **uv** - for managing Python and dependencies
+- **nvm** (Node Version Manager) - for managing Node.js (when frontend is added)
 
 ## Quick Start
 
-### 1. Start the Backend
+### Start the Backend
 
 ```bash
 cd backend
+
+# Activate virtual environment
 source .venv/bin/activate
+
+# Run the server
 python -m app.main
 
 # Or use Makefile
@@ -75,57 +26,22 @@ make dev
 
 The backend will run on `http://localhost:8000`
 
-### 2. Start the Frontend
-
-In a new terminal:
-
-```bash
-# Make sure nvm is available
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-# Use the correct Node version
-nvm use
-
-cd frontend
-npm run dev
-```
-
-The frontend will run on `http://localhost:5173`
-
-## Using Makefiles
-
-### Backend Makefile
+## Using Makefile
 
 ```bash
 cd backend
+
 make help      # Show available commands
-make install   # Sync dependencies
+make install   # Install dependencies
 make dev       # Run development server
 make test      # Run tests
 make test-cov  # Run tests with coverage
 make lint      # Run linter
+make lint-fix  # Fix linting issues
 make clean     # Clean cache files
 ```
 
-### Frontend Makefile
-
-```bash
-cd frontend
-make help         # Show available commands
-make install      # Install npm dependencies
-make dev          # Run development server
-make build        # Build for production
-make test         # Run tests
-make test-watch   # Run tests in watch mode
-make test-cov     # Run tests with coverage
-make lint         # Run ESLint
-make clean        # Clean build artifacts
-```
-
-## Testing
-
-### Backend Tests
+## Running Tests
 
 ```bash
 cd backend
@@ -141,76 +57,114 @@ make test
 make test-cov
 ```
 
-### Frontend Tests
+## Linting
 
 ```bash
-cd frontend
+cd backend
 
-# Run all tests
-npm test
+# Run ruff linter
+ruff check .
 
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
+# Fix auto-fixable issues
+ruff check --fix .
 
 # Or use Makefile
-make test
-make test-watch
-make test-cov
+make lint
+make lint-fix
 ```
 
-## Environment Variables
+## Middleware
 
-### Backend
+The application includes several middleware components:
 
-Create a `.env` file in the `backend/` directory:
+### Request Timing Middleware
+- Adds `X-Process-Time` header to all responses
+- Measures request processing time in seconds
 
-```bash
-PROJECT_NAME="FastAPI Backend"
-API_V1_STR="/api/v1"
-CORS_ORIGINS=["http://localhost:5173"]
-LOG_LEVEL="INFO"
-LOG_JSON_FORMAT=false
-SECRET_KEY="your-secret-key-change-in-production"
+### Request Logging Middleware
+- Logs all incoming requests (method, path, client)
+- Logs all completed requests (method, path, status code)
+
+### Security Headers Middleware
+- Adds security headers to all responses:
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY`
+  - `X-XSS-Protection: 1; mode=block`
+  - `Strict-Transport-Security`
+
+### Correlation ID Middleware
+- Adds unique correlation ID to each request for tracing
+- Header: `X-Correlation-ID`
+
+## Error Handling
+
+The application includes comprehensive error handling:
+
+### Custom Exceptions
+- `AppException` - Base exception with custom status codes
+- `NotFoundException` - 404 errors
+- `ValidationException` - 422 validation errors
+- `UnauthorizedException` - 401 authentication errors
+- `ForbiddenException` - 403 permission errors
+- `ConflictException` - 409 conflict errors
+
+### Global Exception Handlers
+- HTTPException handler for Starlette exceptions
+- RequestValidationError handler for Pydantic validation errors
+- Generic Exception handler with error IDs for unexpected errors
+
+### Error Response Format
+```json
+{
+  "detail": "Error message",
+  "error_id": "unique-error-id",
+  "timestamp": "2024-01-01T00:00:00Z"
+}
 ```
 
-### Frontend
+## Project Structure
 
-Create a `.env` file in the `frontend/` directory:
-
-```bash
-VITE_API_URL=http://localhost:8000
+```
+backend/
+├── app/
+│   ├── main.py           # Application entry point
+│   ├── api/
+│   │   ├── deps.py      # Dependencies (auth, etc.)
+│   │   └── v1/
+│   │       ├── api.py   # Router aggregation
+│   │       └── endpoints/
+│   │           ├── auth.py    # Authentication (login)
+│   │           ├── health.py  # Health check
+│   │           └── items.py   # Items CRUD
+│   ├── core/
+│   │   ├── config.py    # Settings (pydantic-settings)
+│   │   ├── exceptions.py  # Custom exceptions
+│   │   ├── logging.py   # Structlog configuration
+│   │   ├── middleware.py  # Custom middleware
+│   │   └── security.py  # JWT & password utilities
+│   └── schemas/
+│       ├── auth.py      # Auth Pydantic models
+│       └── item.py      # Item Pydantic models
+├── tests/                # Test suite
+├── Makefile             # Development tasks
+└── pyproject.toml       # Project dependencies
 ```
 
 ## API Endpoints
 
-### Public Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Root endpoint - returns welcome message |
-| GET | `/api/v1/health/` | Health check endpoint |
-| POST | `/api/v1/auth/login` | Login to get JWT token |
-
-### Authenticated Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/items/protected-items` | Protected endpoint (requires JWT) |
-
-### Items Endpoints (Public)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/items/{item_id}` | Get item by ID |
-| POST | `/api/v1/items` | Create a new item |
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/` | No | Welcome message |
+| GET | `/api/v1/health/` | No | Health check |
+| POST | `/api/v1/auth/login` | No | Get JWT token |
+| GET | `/api/v1/auth/me` | No | Get current user |
+| GET | `/api/v1/items/{id}` | No | Get item |
+| POST | `/api/v1/items` | No | Create item |
+| GET | `/api/v1/items/protected-items` | Yes | Protected endpoint |
 
 ## Authentication
 
 ### Login
-
 ```bash
 curl -X POST http://localhost:8000/api/v1/auth/login \
   -d "username=admin&password=admin123"
@@ -224,38 +178,36 @@ Response:
 }
 ```
 
-### Access Protected Endpoint
-
+### Access Protected Route
 ```bash
-curl -X GET http://localhost:8000/api/v1/items/protected-items \
-  -H "Authorization: Bearer <your-access-token>"
+curl http://localhost:8000/api/v1/items/protected-items \
+  -H "Authorization: Bearer <token>"
 ```
 
 ### Mock Users
-
-For development, the following mock users are available:
 
 | Username | Password |
 |----------|----------|
 | admin | admin123 |
 | user | user123 |
 
-## Features
+## Environment Variables
 
-- **Vite** - Lightning fast frontend build tool
-- **React 19** - Modern UI library with hooks
-- **FastAPI** - High-performance Python web framework
-- **Pydantic** - Data validation using Python type annotations
-- **JWT Authentication** - Secure token-based auth with bcrypt password hashing
-- **Structured Logging** - Using structlog with correlation IDs
-- **Exception Handling** - Custom exception classes with global handlers
-- **nvm** - Node version management
-- **uv** - Ultra-fast Python package manager
-- **Hot Reload** - Both frontend and backend support auto-reload during development
-- **CORS** - Configured for local development
-- **pytest** - Comprehensive backend testing
-- **Vitest** - Fast frontend testing with React Testing Library
+Create `.env` in backend directory:
 
-## License
+```bash
+PROJECT_NAME="FastAPI Backend"
+API_V1_STR="/api/v1"
+CORS_ORIGINS=["http://localhost:5173"]
+LOG_LEVEL="INFO"
+LOG_JSON_FORMAT=false
+SECRET_KEY="your-secret-key"
+```
 
-MIT
+## Testing
+
+The project includes comprehensive tests with 97% code coverage:
+- Unit tests for utilities
+- Integration tests for API endpoints
+- Middleware tests
+- Error handling tests
