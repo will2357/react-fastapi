@@ -9,6 +9,11 @@ from app.api.v1.api import api_router
 from app.core.config import settings
 from app.core.exceptions import AppException
 from app.core.logging import configure_logging, get_logger
+from app.core.middleware import (
+    RequestLoggingMiddleware,
+    RequestTimingMiddleware,
+    SecurityHeadersMiddleware,
+)
 
 # Configure logging at startup
 configure_logging(
@@ -23,8 +28,11 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
-# Add correlation ID middleware for request tracing
+# Add middleware in order (CORS first, then others)
 app.add_middleware(CorrelationIdMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestTimingMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
