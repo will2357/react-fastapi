@@ -1,9 +1,14 @@
 """FastAPI application entry point with refactored structure."""
 
+import uuid
+from datetime import datetime, timezone
+
 from asgi_correlation_id import CorrelationIdMiddleware
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.v1.api import api_router
 from app.core.config import settings
@@ -53,9 +58,62 @@ async def app_exception_handler(request: Request, exc: AppException):
         status_code=exc.status_code,
         path=request.url.path,
     )
+    content = {"detail": exc.message}
+    if exc.extra:
+        content["extra"] = exc.extra
     return JSONResponse(
         status_code=exc.status_code,
-        content={"detail": exc.message},
+        content=content,
+    )
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """Handle HTTP exceptions."""
+    logger.warning(
+        "http_error",
+        status_code=exc.status_code,
+        detail=exc.detail,
+        path=request.url.path,
+    )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle validation errors."""
+    logger.warning(
+        "validation_error",
+        errors=exc.errors(),
+        path=request.url.path,
+    )
+    return JSONResponse(
+        status_code=422,
+        content={"detail": "Validation error", "errors": exc.errors()},
+    )
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    """Handle unexpected exceptions."""
+    error_id = str(uuid.uuid4())
+    logger.error(
+        "unexpected_error",
+        error_id=error_id,
+        error_type=exc.__class__.__name__,
+        str_error=str(exc),
+        path=request.url.path,
+    )
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "An unexpected error occurred",
+            "error_id": error_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
     )
 
 
