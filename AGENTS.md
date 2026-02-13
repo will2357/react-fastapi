@@ -26,9 +26,14 @@ make clean                           # Clean cache
 
 ### Frontend
 ```bash
-cd frontend
+# Source nvm (add to shell profile for persistence)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-npm install                          # Install deps
+cd frontend
+nvm use                    # Use Node version from .nvmrc
+
+npm install                # Install deps
 npm run dev                         # Run dev server
 make dev                            # Or use Makefile
 
