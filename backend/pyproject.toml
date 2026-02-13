@@ -11,6 +11,8 @@ dependencies = [
     "python-multipart>=0.0.22",
     "pyyaml>=6.0.3",
     "pydantic-settings>=2.0.0",
+    "structlog>=24.0.0",
+    "asgi-correlation-id>=4.0.0",
 ]
 
 [dependency-groups]
