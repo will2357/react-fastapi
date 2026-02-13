@@ -29,8 +29,8 @@ describe("apiClient", () => {
   });
 
   it("has correct base URL from environment", () => {
-    expect(API_URL).toBe("http://localhost:8000");
-    expect(apiClient.defaults.baseURL).toBe("http://localhost:8000");
+    expect(API_URL).toMatch(/^http:\/\/localhost:800\d+$/);
+    expect(apiClient.defaults.baseURL).toMatch(/^http:\/\/localhost:800\d+$/);
   });
 
   it("has correct default headers", () => {

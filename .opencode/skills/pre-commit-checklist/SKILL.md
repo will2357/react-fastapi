@@ -23,7 +23,17 @@ Backend Linter:
 Frontend Linter:
 - cd frontend && nvm use && make lint
 
-## 3. Verify Documentation
+## 3. Run E2E Tests (Optional but Recommended)
+
+Run E2E tests if they exist. E2E tests use Playwright:
+
+Run E2E tests:
+- make test-integration
+
+Or directly:
+- cd frontend && nvm use && npm run test:e2e
+
+## 4. Verify Documentation
 
 Per AGENTS.md Pre-Commit Requirements, update documentation if changes affect:
 - README.md (root)
@@ -31,7 +41,7 @@ Per AGENTS.md Pre-Commit Requirements, update documentation if changes affect:
 - frontend/README.md
 - AGENTS.md (if process/tasks change)
 
-## 4. Only Then Commit
+## 5. Only Then Commit
 
 After all tests pass, linters pass, and documentation is updated:
 - git add -A && git commit -m "<message>"

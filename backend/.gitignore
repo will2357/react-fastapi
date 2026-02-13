@@ -41,6 +41,8 @@ venv.bak/
 .env
 .env.local
 .env.development
+!.env.dev
+!.env.test
 .env.test
 .env.production
 

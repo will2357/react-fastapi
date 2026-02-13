@@ -39,7 +39,7 @@ npm run dev                         # Run dev server
 make dev                            # Or use Makefile
 
 npm run build                       # Production build
-npm test                           # Run tests
+npm test                           # Run unit tests
 npm run test:watch                 # Watch mode
 npm run test:coverage              # With coverage
 
@@ -47,6 +47,10 @@ npm run lint                       # ESLint
 npm run lint -- --fix              # Auto-fix
 make test-cov                     # Run tests with coverage
 make clean                         # Clean build artifacts
+
+# E2E tests (vitest browser mode)
+npm run test:e2e                   # Run E2E tests
+make test-e2e                     # Or use Makefile
 ```
 
 ---
@@ -104,8 +108,9 @@ frontend/
 │   ├── store/           # Zustand stores
 │   ├── App.tsx         # Router
 │   └── main.tsx        # Entry
-├── tests/               # Test files
-├── Makefile, package.json, vite.config.ts
+├── tests/               # Test files (unit)
+├── tests/e2e/          # E2E tests (vitest browser)
+├── Makefile, package.json, vite.config.ts, vitest.config.ts
 ```
 
 ---
@@ -144,7 +149,9 @@ Before creating a commit:
 3. **Run linters and fix any issues**:
    - Backend: `cd backend && make lint`
    - Frontend: `cd frontend && nvm use && make lint`
-4. **Update documentation** if the changes affect:
+4. **Run E2E tests (optional but recommended)**:
+   - `make test-integration` (runs vitest browser mode E2E tests)
+5. **Update documentation** if the changes affect:
    - README.md (root)
    - backend/README.md
    - frontend/README.md
@@ -155,7 +162,7 @@ Before creating a commit:
 ## Dependencies
 
 - **Backend**: fastapi, uvicorn, pydantic, pydantic-settings, structlog, pyjwt, bcrypt, pytest, pytest-cov, ruff
-- **Frontend**: react, react-dom, react-router-dom, zustand, axios, vitest, @testing-library/react, eslint
+- **Frontend**: react, react-dom, react-router-dom, zustand, axios, vitest, @testing-library/react, eslint, playwright, @vitest/browser
 
 ---
 

@@ -13,6 +13,8 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
+    exclude: ["tests/e2e/**", "**/node_modules/**"],
+    include: ["tests/**/*.test.{ts,tsx}"],
   },
   coverage: {
     provider: "v8",
@@ -21,7 +23,7 @@ export default defineConfig({
       "src/vite-env.d.ts",
       "tests/**",
       "vite.config.ts",
-      "vitest.config.ts",
+      "vitest.config.mts",
       "tailwind.config.js",
       "postcss.config.js",
       "eslint.config.js",

@@ -117,6 +117,23 @@ make test-watch
 make test-cov
 ```
 
+### Integration/E2E Tests
+
+E2E tests use Vitest Browser Mode with Playwright. The tests automatically start both backend (port 8001) and frontend (port 5174) servers.
+
+```bash
+# Run E2E tests
+make test-integration
+
+# Or use frontend Makefile
+cd frontend
+make test-e2e
+
+# Or run directly
+cd frontend
+npm run test:e2e
+```
+
 ## Linting
 
 ### Backend
