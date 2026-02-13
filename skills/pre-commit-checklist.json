@@ -1,0 +1,6 @@
+{
+  "name": "pre-commit-checklist",
+  "description": "Ensures tests, linters, and documentation are verified before committing",
+  "trigger": "auto | /pre-commit",
+  "instructions": "Before creating a commit, you MUST complete all of the following:\n\n## 1. Run All Tests\n\nRun tests for BOTH backend and frontend and ensure they ALL pass:\n\nBackend Tests:\n- cd backend && source .venv/bin/activate && make test\n\nFrontend Tests:\n- cd frontend && nvm use && make test\n\n## 2. Run All Linters\n\nRun linters for BOTH backend and frontend and fix ANY issues:\n\nBackend Linter:\n- cd backend && source .venv/bin/activate && make lint\n\nFrontend Linter:\n- cd frontend && nvm use && make lint\n\n## 3. Verify Documentation\n\nPer AGENTS.md Pre-Commit Requirements, update documentation if changes affect:\n- README.md (root)\n- backend/README.md\n- frontend/README.md\n- AGENTS.md (if process/tasks change)\n\n## 4. Only Then Commit\n\nAfter all tests pass, linters pass, and documentation is updated:\n- git add -A && git commit -m \"<message>\"\n\n## Important Notes\n- This checklist MUST be followed for EVERY commit\n- Do NOT skip any step\n- If tests or linters fail, fix them before committing\n- If documentation needs updating, update it before committing"
+}
