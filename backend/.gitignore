@@ -43,7 +43,6 @@ venv.bak/
 .env.development
 !.env.dev
 !.env.test
-.env.test
 .env.production
 
 # Testing

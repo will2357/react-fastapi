@@ -248,7 +248,7 @@ Response:
 
 ### Backend
 
-Create `.env` in backend directory:
+Create `.env.dev` in backend directory (or copy from `.env.dev.example`):
 
 ```bash
 PROJECT_NAME="FastAPI Backend"
@@ -259,10 +259,14 @@ LOG_JSON_FORMAT=false
 SECRET_KEY="your-secret-key"
 ```
 
+For testing, use `.env.test` with `CORS_ORIGINS=["http://localhost:5174"]`.
+
 ### Frontend
 
-Create `.env` in frontend directory:
+Create `.env.dev` in frontend directory:
 
 ```bash
 VITE_API_URL=http://localhost:8000
 ```
+
+For testing, create `.env.test` with `VITE_API_URL=http://localhost:8001`.

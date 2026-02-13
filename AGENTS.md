@@ -117,16 +117,13 @@ frontend/
 
 ## Environment
 
-**Backend (.env)**:
-```
-PROJECT_NAME="FastAPI Backend"
-API_V1_STR="/api/v1"
-CORS_ORIGINS=["http://localhost:5173"]
-LOG_LEVEL="INFO"
-SECRET_KEY="your-secret-key"
-```
+**Backend (.env.dev / .env.test)**:
+- `.env.dev` - Development: `CORS_ORIGINS=["http://localhost:5173"]`
+- `.env.test` - Testing: `CORS_ORIGINS=["http://localhost:5174"]`
 
-**Frontend (.env)**: `VITE_API_URL=http://localhost:8000`
+**Frontend (.env.dev / .env.test)**:
+- `.env.dev`: `VITE_API_URL=http://localhost:8000`
+- `.env.test`: `VITE_API_URL=http://localhost:8001`
 
 ---
 

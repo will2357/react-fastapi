@@ -99,10 +99,16 @@ The auth store uses `onRehydrateStorage` to track when persisted state is loaded
 
 ## Environment Variables
 
-Create `.env` in frontend directory:
+Create `.env.dev` in frontend directory:
 
 ```bash
 VITE_API_URL=http://localhost:8000
+```
+
+For testing, create `.env.test`:
+
+```bash
+VITE_API_URL=http://localhost:8001
 ```
 
 ## Running Tests

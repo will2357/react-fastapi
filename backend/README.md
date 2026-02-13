@@ -161,7 +161,7 @@ curl http://localhost:8000/api/v1/items/protected-items \
 
 ## Environment Variables
 
-Create `.env` in backend directory:
+Create `.env.dev` in backend directory:
 
 ```bash
 PROJECT_NAME="FastAPI Backend"
@@ -170,6 +170,17 @@ CORS_ORIGINS=["http://localhost:5173"]
 LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
 SECRET_KEY="your-secret-key"
+```
+
+For testing, create `.env.test`:
+
+```bash
+PROJECT_NAME="FastAPI Backend"
+API_V1_STR="/api/v1"
+CORS_ORIGINS=["http://localhost:5174"]
+LOG_LEVEL="INFO"
+LOG_JSON_FORMAT=false
+SECRET_KEY="test-secret-key"
 ```
 
 ## Testing
