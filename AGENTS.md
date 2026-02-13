@@ -137,13 +137,14 @@ SECRET_KEY="your-secret-key"
 ## Pre-Commit Requirements
 
 Before creating a commit:
-1. **Run all tests and ensure they pass**:
+1. **ALWAYS use the pre-commit-checklist skill** before proceeding (use the `/` command to invoke it)
+2. **Run all tests and ensure they pass**:
    - Backend: `cd backend && make test`
    - Frontend: `cd frontend && nvm use && make test`
-2. **Run linters and fix any issues**:
+3. **Run linters and fix any issues**:
    - Backend: `cd backend && make lint`
    - Frontend: `cd frontend && nvm use && make lint`
-3. **Update documentation** if the changes affect:
+4. **Update documentation** if the changes affect:
    - README.md (root)
    - backend/README.md
    - frontend/README.md
