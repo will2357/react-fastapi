@@ -6,15 +6,19 @@ import useAuthStore from '../store/useAuthStore';
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isHydrated } = useAuthStore();
 
   const from = location.state?.from?.pathname || '/dashboard';
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isHydrated && isAuthenticated) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, from]);
+  }, [isHydrated, isAuthenticated, navigate, from]);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <div className="login-page">
