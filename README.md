@@ -119,7 +119,7 @@ make test-cov
 
 ### Integration/E2E Tests
 
-E2E tests use Vitest Browser Mode with Playwright. The tests automatically start both backend (port 8001) and frontend (port 5174) servers.
+E2E tests use Playwright. The tests automatically start both backend (port 8001) and frontend (port 5174) servers.
 
 ```bash
 # Run E2E tests

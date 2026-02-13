@@ -150,7 +150,7 @@ Before creating a commit:
    - Backend: `cd backend && make lint`
    - Frontend: `cd frontend && nvm use && make lint`
 4. **Run E2E tests (optional but recommended)**:
-   - `make test-integration` (runs vitest browser mode E2E tests)
+   - `make test-integration` (runs Playwright E2E tests)
 5. **Update documentation** if the changes affect:
    - README.md (root)
    - backend/README.md

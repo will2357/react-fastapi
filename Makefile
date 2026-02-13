@@ -12,7 +12,7 @@ help:
 	@echo "  make test-cov-backend   - Run backend tests with coverage"
 	@echo "  make test-cov-frontend  - Run frontend tests with coverage"
 	@echo "  make test-cov           - Run all tests with coverage"
-	@echo "  make test-integration   - Run E2E integration tests (vitest browser)"
+	@echo "  make test-integration   - Run E2E integration tests (Playwright)"
 	@echo ""
 	@echo "Linting:"
 	@echo "  make lint-backend       - Run backend linter (ruff)"
