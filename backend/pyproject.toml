@@ -24,7 +24,7 @@ dev = [
 ]
 
 [project.scripts]
-backend = "main:app"
+backend = "app.main:app"
 
 [build-system]
 requires = ["hatchling"]
