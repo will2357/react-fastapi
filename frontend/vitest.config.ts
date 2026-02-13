@@ -24,6 +24,7 @@ export default defineConfig({
       "vitest.config.ts",
       "tailwind.config.js",
       "postcss.config.js",
+      "eslint.config.js",
     ],
   },
 });

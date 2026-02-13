@@ -1,3 +1,4 @@
+/* v8 ignore start */
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -72,3 +73,4 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 }
+/* v8 ignore stop */
