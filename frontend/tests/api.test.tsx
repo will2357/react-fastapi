@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import apiClient, { API_URL } from '../src/api/client';
 
 describe('API Client', () => {

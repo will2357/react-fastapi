@@ -1,12 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { AxiosInstance } from 'axios';
 import apiClient from '../src/api/client';
 import * as api from '../src/services/api';
+import type { TokenResponse, ItemsResponse, HealthResponse, Item } from '../src/services/api';
 
 vi.mock('../src/api/client', () => ({
   default: {
     post: vi.fn(),
     get: vi.fn(),
-  },
+  } as unknown as AxiosInstance,
 }));
 
 describe('API Service', () => {
@@ -16,8 +18,8 @@ describe('API Service', () => {
 
   describe('login', () => {
     it('should call login endpoint with form data', async () => {
-      const mockResponse = { data: { access_token: 'test-token', token_type: 'bearer' } };
-      apiClient.post.mockResolvedValue(mockResponse);
+      const mockResponse = { data: { access_token: 'test-token', token_type: 'bearer' } as TokenResponse };
+      (apiClient.post as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
 
       const result = await api.login('admin', 'admin123');
 
@@ -32,7 +34,7 @@ describe('API Service', () => {
     });
 
     it('should throw error on failure', async () => {
-      apiClient.post.mockRejectedValue(new Error('Login failed'));
+      (apiClient.post as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Login failed'));
 
       await expect(api.login('admin', 'wrong')).rejects.toThrow('Login failed');
     });
@@ -40,8 +42,8 @@ describe('API Service', () => {
 
   describe('getProtectedItems', () => {
     it('should call protected endpoint', async () => {
-      const mockResponse = { data: { items: ['item1', 'item2'] } };
-      apiClient.get.mockResolvedValue(mockResponse);
+      const mockResponse = { data: { items: ['item1', 'item2'] } as ItemsResponse };
+      (apiClient.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
 
       const result = await api.getProtectedItems();
 
@@ -53,7 +55,7 @@ describe('API Service', () => {
   describe('getItem', () => {
     it('should call item endpoint with itemId', async () => {
       const mockResponse = { data: { item_id: 42, name: 'Test' } };
-      apiClient.get.mockResolvedValue(mockResponse);
+      (apiClient.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
 
       const result = await api.getItem(42);
 
@@ -65,8 +67,8 @@ describe('API Service', () => {
   describe('createItem', () => {
     it('should call create item endpoint', async () => {
       const mockResponse = { data: { message: 'Item created' } };
-      const itemData = { name: 'Test', price: 10 };
-      apiClient.post.mockResolvedValue(mockResponse);
+      const itemData: Item = { name: 'Test', price: 10 };
+      (apiClient.post as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
 
       const result = await api.createItem(itemData);
 
@@ -77,8 +79,8 @@ describe('API Service', () => {
 
   describe('getHealth', () => {
     it('should call health endpoint', async () => {
-      const mockResponse = { data: { status: 'healthy' } };
-      apiClient.get.mockResolvedValue(mockResponse);
+      const mockResponse = { data: { status: 'healthy' } as HealthResponse };
+      (apiClient.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
 
       const result = await api.getHealth();
 

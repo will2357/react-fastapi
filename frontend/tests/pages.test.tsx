@@ -6,6 +6,8 @@ import userEvent from '@testing-library/user-event';
 import Home from '../src/pages/Home';
 import Dashboard from '../src/pages/Dashboard';
 import Items from '../src/pages/Items';
+import type { HealthResponse, Item } from '../src/services/api';
+import type { User } from '../src/store/useAuthStore';
 
 vi.mock('../src/services/api', () => ({
   __esModule: true,
@@ -28,15 +30,15 @@ import useAuthStore from '../src/store/useAuthStore';
 describe('Pages', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    useAuthStore.mockReturnValue({
-      user: { username: 'admin' },
+    (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
+      user: { username: 'admin' } as User,
       isAuthenticated: true,
     });
   });
 
   describe('Home', () => {
     it('renders welcome heading and description', async () => {
-      api.getHealth.mockResolvedValue({ status: 'healthy' });
+      (api.getHealth as ReturnType<typeof vi.fn>).mockResolvedValue({ status: 'healthy' } as HealthResponse);
 
       await act(async () => {
         render(
@@ -51,7 +53,7 @@ describe('Pages', () => {
     });
 
     it('shows "Checking backend..." initially', async () => {
-      api.getHealth.mockImplementation(() => new Promise(() => {}));
+      (api.getHealth as ReturnType<typeof vi.fn>).mockImplementation(() => new Promise(() => {}));
 
       await act(async () => {
         render(
@@ -65,7 +67,7 @@ describe('Pages', () => {
     });
 
     it('shows healthy status when backend is healthy', async () => {
-      api.getHealth.mockResolvedValue({ status: 'healthy' });
+      (api.getHealth as ReturnType<typeof vi.fn>).mockResolvedValue({ status: 'healthy' } as HealthResponse);
 
       await act(async () => {
         render(
@@ -79,7 +81,7 @@ describe('Pages', () => {
     });
 
     it('shows unavailable status when backend is down', async () => {
-      api.getHealth.mockRejectedValue(new Error('Network error'));
+      (api.getHealth as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Network error'));
 
       await act(async () => {
         render(
@@ -93,7 +95,7 @@ describe('Pages', () => {
     });
 
     it('renders quick links section', async () => {
-      api.getHealth.mockResolvedValue({ status: 'healthy' });
+      (api.getHealth as ReturnType<typeof vi.fn>).mockResolvedValue({ status: 'healthy' } as HealthResponse);
 
       await act(async () => {
         render(
@@ -112,8 +114,8 @@ describe('Pages', () => {
 
   describe('Dashboard', () => {
     it('renders dashboard with user welcome message', async () => {
-      useAuthStore.mockReturnValue({
-        user: { username: 'testuser' },
+      (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
+        user: { username: 'testuser' } as User,
       });
 
       await act(async () => {
@@ -143,7 +145,7 @@ describe('Pages', () => {
     });
 
     it('handles null user gracefully', async () => {
-      useAuthStore.mockReturnValue({
+      (useAuthStore as ReturnType<typeof vi.fn>).mockReturnValue({
         user: null,
       });
 
@@ -163,7 +165,7 @@ describe('Pages', () => {
   describe('Items', () => {
     beforeEach(() => {
       vi.clearAllMocks();
-      api.createItem.mockResolvedValue({ message: 'Item created successfully' });
+      (api.createItem as ReturnType<typeof vi.fn>).mockResolvedValue({ message: 'Item created successfully' });
     });
 
     it('renders items page with form', async () => {
@@ -212,7 +214,7 @@ describe('Pages', () => {
     });
 
     it('shows error message on failure', async () => {
-      api.createItem.mockRejectedValue(new Error('Failed to create'));
+      (api.createItem as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Failed to create'));
 
       await act(async () => {
         render(<Items />);
@@ -226,7 +228,7 @@ describe('Pages', () => {
     });
 
     it('shows loading state during submission', async () => {
-      api.createItem.mockImplementation(() => new Promise(() => {}));
+      (api.createItem as ReturnType<typeof vi.fn>).mockImplementation(() => new Promise(() => {}));
 
       await act(async () => {
         render(<Items />);

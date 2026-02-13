@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import useAuthStore from '../src/store/useAuthStore';
+import useAuthStore, { type User } from '../src/store/useAuthStore';
 
 describe('useAuthStore', () => {
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe('useAuthStore', () => {
 
   it('should set user', () => {
     const { result } = renderHook(() => useAuthStore());
-    const testUser = { username: 'admin', email: 'admin@example.com' };
+    const testUser: User = { username: 'admin' };
     
     act(() => {
       result.current.setUser(testUser);
@@ -60,7 +60,7 @@ describe('useAuthStore', () => {
     await act(async () => {
       try {
         await result.current.login(mockLogin);
-      } catch (e) {
+      } catch {
         // Expected to throw
       }
     });
