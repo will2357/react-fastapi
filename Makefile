@@ -70,8 +70,8 @@ test-integration:
 	@(cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && VITE_API_URL='http://localhost:8001' npm run test:server) &
 	@sleep 5
 	@echo "Running E2E tests..."
-	@cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && npm run test:e2e; EXIT_CODE=$$?; \
-	pkill -f "uvicorn" 2>/dev/null || true; \
-	pkill -f "vite" 2>/dev/null || true; \
-	echo "Done."; \
-	exit $$EXIT_CODE
+	@cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && npm run test:e2e; TEST_EXIT=$$?; \
+	kill $$(lsof -t -i:8001) 2>/dev/null || true; \
+	kill $$(lsof -t -i:5174) 2>/dev/null || true; \
+	echo "Cleanup complete."; \
+	exit $$TEST_EXIT
