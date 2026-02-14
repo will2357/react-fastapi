@@ -5,7 +5,7 @@ help:
 	@echo "  make install    - Sync Python dependencies (uv sync)"
 	@echo "  make dev        - Run development server (uvicorn with reload)"
 	@echo "  make build      - Build for production (no-op for Python)"
-	@echo "  make test       - Run all tests"
+	@echo "  make test       - Run all tests (uses DATABASE_URL from .env.test)"
 	@echo "  make test-cov   - Run tests with coverage report"
 	@echo "  make lint       - Run ruff linter"
 	@echo "  make lint-fix   - Run ruff with auto-fix"
@@ -22,10 +22,10 @@ build:
 	@echo "No build step required for Python"
 
 test:
-	python -m pytest -v
+	DATABASE_URL="postgresql://test:password@localhost:5432/api_test" python -m pytest -v
 
 test-cov:
-	python -m pytest --cov=app --cov-report=term-missing tests/
+	DATABASE_URL="postgresql://test:password@localhost:5432/api_test" python -m pytest --cov=app --cov-report=term-missing tests/
 
 lint:
 	ruff check .

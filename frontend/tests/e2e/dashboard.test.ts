@@ -12,19 +12,19 @@ test.describe('Dashboard', () => {
   test('authenticated user sees username', async ({ page }) => {
     await page.goto(`${BASE_URL}/login`);
     
-    await page.fill('input[id="username"]', 'admin');
-    await page.fill('input[id="password"]', 'admin123');
+    await page.fill('input[id="username"]', 'e2e_user');
+    await page.fill('input[id="password"]', 'e2e123');
     await page.click('button[type="submit"]');
     
     await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 10000 });
-    await expect(page.locator('h3')).toContainText('Welcome, admin!');
+    await expect(page.locator('h3')).toContainText('Welcome, e2e_user!');
   });
 
   test('dashboard shows protected content message', async ({ page }) => {
     await page.goto(`${BASE_URL}/login`);
     
-    await page.fill('input[id="username"]', 'admin');
-    await page.fill('input[id="password"]', 'admin123');
+    await page.fill('input[id="username"]', 'e2e_user');
+    await page.fill('input[id="password"]', 'e2e123');
     await page.click('button[type="submit"]');
     
     await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 10000 });

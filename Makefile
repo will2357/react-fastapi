@@ -57,8 +57,14 @@ lint-fix-frontend:
 lint-fix: lint-fix-backend lint-fix-frontend
 
 test-integration:
+	@echo "Resetting database for integration tests..."
+	@PGPASSWORD=password psql -U test -d api_test -h localhost -c "DROP TABLE IF EXISTS items CASCADE; DROP TABLE IF EXISTS users CASCADE; DROP TABLE IF EXISTS alembic_version CASCADE;"
+	@echo "Running database migrations for test..."
+	@cd backend && source .venv/bin/activate && DATABASE_URL='postgresql://test:password@localhost:5432/api_test' alembic upgrade head
+	@echo "Seeding test database..."
+	@cd backend && source .venv/bin/activate && DATABASE_URL='postgresql://test:password@localhost:5432/api_test' python scripts/seed_test.py
 	@echo "Starting backend server..."
-	@(cd backend && source .venv/bin/activate && CORS_ORIGINS='["http://localhost:5174"]' SECRET_KEY='test-secret-key' python -m uvicorn app.main:app --port 8001) &
+	@(cd backend && source .venv/bin/activate && CORS_ORIGINS='["http://localhost:5174"]' SECRET_KEY='test-secret-key' DATABASE_URL='postgresql://test:password@localhost:5432/api_test' python -m uvicorn app.main:app --port 8001) &
 	@sleep 3
 	@echo "Starting frontend server..."
 	@(cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && VITE_API_URL='http://localhost:8001' npm run test:server) &

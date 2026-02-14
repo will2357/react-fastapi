@@ -118,8 +118,8 @@ frontend/
 ## Environment
 
 **Backend (.env.dev / .env.test)**:
-- `.env.dev` - Development: `CORS_ORIGINS=["http://localhost:5173"]`
-- `.env.test` - Testing: `CORS_ORIGINS=["http://localhost:5174"]`
+- `.env.dev` - Development: `CORS_ORIGINS=["http://localhost:5173"]`, `DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"`
+- `.env.test` - Testing: `CORS_ORIGINS=["http://localhost:5174"]`, `DATABASE_URL="postgresql://test:password@localhost:5432/api_test"`
 
 **Frontend (.env.dev / .env.test)**:
 - `.env.dev`: `VITE_API_URL=http://localhost:8000`
@@ -158,7 +158,7 @@ Before creating a commit:
 
 ## Dependencies
 
-- **Backend**: fastapi, uvicorn, pydantic, pydantic-settings, structlog, pyjwt, bcrypt, pytest, pytest-cov, ruff
+- **Backend**: fastapi, uvicorn, pydantic, pydantic-settings, structlog, pyjwt, bcrypt, pytest, pytest-cov, ruff, sqlalchemy, alembic, psycopg2
 - **Frontend**: react, react-dom, react-router-dom, zustand, axios, vitest, @testing-library/react, eslint, playwright, @vitest/browser
 
 ---

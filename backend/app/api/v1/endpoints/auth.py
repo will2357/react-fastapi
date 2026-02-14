@@ -1,54 +1,63 @@
 """Authentication endpoints."""
 
 from datetime import timedelta
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.logging import get_logger
 from app.core.security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
-    get_password_hash,
     verify_password,
 )
-from app.schemas.auth import Token, User
+from app.database import get_db
+from app.models import User
+from app.schemas.auth import Token
+from app.schemas.auth import User as UserSchema
 
 router = APIRouter()
 logger = get_logger(__name__)
 
-# Mock user database - in production, use a real database
-MOCK_USERS = {
-    "admin": {
-        "username": "admin",
-        "email": "admin@example.com",
-        "hashed_password": get_password_hash("admin123"),
-        "is_active": True,
-    },
-    "user": {
-        "username": "user",
-        "email": "user@example.com",
-        "hashed_password": get_password_hash("user123"),
-        "is_active": True,
-    },
-}
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
+
+
+def get_current_active_user(
+    token: Annotated[str, Depends(oauth2_scheme)],
+    db: Session = Depends(get_db),
+) -> User:
+    """Get current active user from token."""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        username: str | None = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception from None
+
+    user = db.query(User).filter(User.username == username).first()
+    if user is None:
+        raise credentials_exception
+    return user
 
 
 @router.post("/login", response_model=Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    """Login endpoint to get access token.
-
-    Args:
-        form_data: OAuth2 form with username and password
-
-    Returns:
-        Token with access_token
-
-    Raises:
-        HTTPException: If authentication fails
-    """
-    user = MOCK_USERS.get(form_data.username)
-    if not user or not verify_password(form_data.password, user["hashed_password"]):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db),
+):
+    """Login endpoint to get access token."""
+    user = db.query(User).filter(User.username == form_data.username).first()
+    if not user or not verify_password(form_data.password, user.hashed_password):
         logger.warning("login_failed", username=form_data.username)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,20 +67,20 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user["username"]}, expires_delta=access_token_expires
+        data={"sub": user.username}, expires_delta=access_token_expires
     )
 
-    logger.info("login_successful", username=user["username"])
+    logger.info("login_successful", username=user.username)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/me", response_model=User)
-async def read_users_me():
-    """Get current authenticated user info.
-
-    Note: This is a placeholder endpoint. The actual get_current_user
-    dependency would be used here.
-    """
-    # This would normally use the get_current_user dependency
-    # For now, return a mock response
-    return User(username="admin", email="admin@example.com")
+@router.get("/me", response_model=UserSchema)
+def read_users_me(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    """Get current authenticated user info."""
+    return UserSchema(
+        username=current_user.username,
+        email=current_user.email,
+        is_active=current_user.is_active,
+    )

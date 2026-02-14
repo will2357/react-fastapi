@@ -1,11 +1,10 @@
 """Application configuration."""
 
-from pydantic import ConfigDict
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = ConfigDict(
+    model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=True,
         extra="ignore",
@@ -17,6 +16,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_JSON_FORMAT: bool = False
     SECRET_KEY: str = "your-secret-key-change-in-production"
+    DATABASE_URL: str = "postgresql://dev:argyle@localhost:5432/dev"
 
 
 settings = Settings()
