@@ -237,12 +237,15 @@ Response:
 }
 ```
 
-### Mock Users
+### Seeded Users
 
-| Username | Password |
-|----------|----------|
-| admin | admin123 |
-| user | user123 |
+The dev and test databases are seeded with users via seed scripts:
+
+| Username | Password | Description |
+|----------|----------|-------------|
+| admin | admin123 | Dev user (seed_dev.py) |
+| user | user123 | Dev user (seed_dev.py) |
+| e2e_user | e2e123 | Test user for E2E tests (seed_test.py) |
 
 ## Environment Variables
 
@@ -257,9 +260,10 @@ CORS_ORIGINS=["http://localhost:5173"]
 LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
 SECRET_KEY="your-secret-key"
+DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"
 ```
 
-For testing, use `.env.test` with `CORS_ORIGINS=["http://localhost:5174"]`.
+For testing, use `.env.test` with `CORS_ORIGINS=["http://localhost:5174"]` and `DATABASE_URL="postgresql://test:password@localhost:5432/api_test"`.
 
 ### Frontend
 

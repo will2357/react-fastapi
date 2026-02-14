@@ -170,6 +170,7 @@ CORS_ORIGINS=["http://localhost:5173"]
 LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
 SECRET_KEY="your-secret-key"
+DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"
 ```
 
 For testing, create `.env.test`:
@@ -181,7 +182,55 @@ CORS_ORIGINS=["http://localhost:5174"]
 LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
 SECRET_KEY="test-secret-key"
+DATABASE_URL="postgresql://test:password@localhost:5432/api_test"
 ```
+
+## Database Setup
+
+### Prerequisites
+- PostgreSQL 18.2+ must be installed and running
+
+### Setup Script
+Run the database setup script to create users and databases:
+
+```bash
+# Run as postgres user or with sudo
+sudo -u postgres python scripts/setup_db.py
+```
+
+This will create:
+- **Dev user**: `dev` with password `argyle`
+- **Test user**: `test` with password `password`
+- **Dev database**: `api_dev` (owned by dev)
+- **Test database**: `api_test` (owned by test)
+
+### Running Migrations
+
+For development:
+```bash
+DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev" alembic upgrade head
+```
+
+For testing:
+```bash
+DATABASE_URL="postgresql://test:password@localhost:5432/api_test" alembic upgrade head
+```
+
+### Seed Data
+
+Seed the development database:
+```bash
+DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev" python scripts/seed_dev.py
+```
+
+Seed the test database:
+```bash
+DATABASE_URL="postgresql://test:password@localhost:5432/api_test" python scripts/seed_test.py
+```
+
+The seed scripts create:
+- **Dev**: `admin` (password: admin123), `user` (password: user123) with sample items
+- **Test**: `e2e_user` (password: e2e123) with sample items for E2E tests
 
 ## Testing
 

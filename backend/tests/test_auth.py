@@ -88,7 +88,7 @@ class TestAuthEndpoints:
     def test_login_success(self, client: TestClient):
         """Test successful login."""
         response = client.post(
-            "/api/v1/auth/login", data={"username": "admin", "password": "admin123"}
+            "/api/v1/auth/login", data={"username": "test_admin", "password": "admin123"}
         )
         assert response.status_code == 200
         data = response.json()
@@ -100,7 +100,7 @@ class TestAuthEndpoints:
         """Test login with wrong password."""
         response = client.post(
             "/api/v1/auth/login",
-            data={"username": "admin", "password": "wrongpassword"},
+            data={"username": "test_admin", "password": "wrongpassword"},
         )
         assert response.status_code == 401
         assert response.json()["detail"] == "Incorrect username or password"
@@ -116,11 +116,21 @@ class TestAuthEndpoints:
 
     def test_read_users_me(self, client: TestClient):
         """Test reading current user info."""
-        response = client.get("/api/v1/auth/me")
+        # First login to get token
+        login_response = client.post(
+            "/api/v1/auth/login", data={"username": "test_admin", "password": "admin123"}
+        )
+        token = login_response.json()["access_token"]
+
+        # Get current user info
+        response = client.get(
+            "/api/v1/auth/me",
+            headers={"Authorization": f"Bearer {token}"},
+        )
         assert response.status_code == 200
         data = response.json()
-        assert data["username"] == "admin"
-        assert data["email"] == "admin@example.com"
+        assert data["username"] == "test_admin"
+        assert data["email"] == "test_admin@example.com"
 
 
 class TestProtectedEndpoints:
@@ -136,7 +146,7 @@ class TestProtectedEndpoints:
         """Test accessing protected endpoint with valid token."""
         # First login to get token
         login_response = client.post(
-            "/api/v1/auth/login", data={"username": "admin", "password": "admin123"}
+            "/api/v1/auth/login", data={"username": "test_admin", "password": "admin123"}
         )
         token = login_response.json()["access_token"]
 
@@ -147,7 +157,7 @@ class TestProtectedEndpoints:
         )
         assert response.status_code == 200
         data = response.json()
-        assert "Hello admin" in data["message"]
+        assert "Hello test_admin" in data["message"]
         assert "items" in data
 
     def test_protected_endpoint_with_invalid_token(self, client: TestClient):
