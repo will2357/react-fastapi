@@ -140,6 +140,8 @@ app/
 | GET | `/` | No | Welcome message |
 | GET | `/api/v1/health/` | No | Health check |
 | POST | `/api/v1/auth/login` | No | Get JWT token |
+| POST | `/api/v1/auth/signup` | No | Register new user |
+| GET | `/api/v1/auth/confirm/{token}` | No | Confirm email |
 | GET | `/api/v1/auth/me` | No | Get current user |
 | GET | `/api/v1/items/{id}` | No | Get item |
 | POST | `/api/v1/items` | No | Create item |
@@ -152,6 +154,15 @@ app/
 curl -X POST http://localhost:8000/api/v1/auth/login \
   -d "username=admin&password=admin123"
 ```
+
+### Signup
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"newuser","email":"user@example.com","password":"password123"}'
+```
+
+After signup, check your email and click the confirmation link. Once confirmed, you can login.
 
 ### Access Protected Route
 ```bash
@@ -171,6 +182,14 @@ LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
 SECRET_KEY="your-secret-key"
 DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"
+
+# SMTP Configuration (for email confirmation)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="your-email@gmail.com"
+SMTP_PASSWORD="your-app-password"
+SMTP_FROM_EMAIL="noreply@yourdomain.com"
+SMTP_FROM_NAME="App Name"
 ```
 
 For testing, create `.env.test`:

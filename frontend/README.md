@@ -54,12 +54,15 @@ make clean        # Clean build artifacts
 ```
 src/
 ├── api/
+│   ├── auth.ts        # Auth API (signup)
 │   └── client.ts       # Axios client with auth interceptors
 ├── components/
 │   └── ProtectedRoute.tsx  # Auth guard component
 ├── pages/
 │   ├── Dashboard.tsx  # Protected dashboard page
-│   └── Login.tsx       # Login page
+│   ├── Login.tsx       # Login page
+│   ├── Signup.tsx      # Signup page
+│   └── ConfirmSignup.tsx  # Email confirmation page
 ├── store/
 │   └── useAuthStore.ts # Auth store (Zustand with persist)
 ├── App.tsx            # Main app with routing
@@ -69,6 +72,7 @@ tests/
 ├── setup.ts              # Test setup
 ├── App.test.tsx          # App tests
 ├── login.test.tsx        # Login page tests
+├── signup.test.tsx       # Signup page tests
 ├── protectedRoute.test.tsx  # Protected route tests
 ├── store.test.ts        # Store tests (non-persist)
 └── authStore.test.ts    # Auth store tests (with persistence)
@@ -79,16 +83,19 @@ tests/
 The frontend includes JWT authentication with the backend:
 
 - **Login Page** (`/login`) - User login form
+- **Signup Page** (`/signup`) - User registration with email confirmation
 - **Protected Routes** - Dashboard and other authenticated routes
 - **Persistent State** - Auth state persisted via Zustand middleware
 - **Auto-logout** - Redirects to login on 401 responses
 
 ### Auth Flow
 
-1. User enters credentials on `/login`
-2. Frontend sends POST to `/api/v1/auth/login`
-3. On success, token stored in localStorage via Zustand persist
-4. Protected routes check auth state and hydration before rendering
+1. User enters credentials on `/login` (or registers on `/signup`)
+2. On signup, user receives confirmation email
+3. User clicks confirmation link, redirected to login with success message
+4. Frontend sends POST to `/api/v1/auth/login`
+5. On success, token stored in localStorage via Zustand persist
+6. Protected routes check auth state and hydration before rendering
 
 ### Avoiding Hydration Issues
 

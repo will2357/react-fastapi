@@ -43,3 +43,21 @@ class UserInDB(User):
     """User with hashed password."""
 
     hashed_password: str
+
+
+class UserSignup(BaseModel):
+    """User signup request schema."""
+
+    model_config = ConfigDict(strict=True)
+
+    username: str
+    email: str
+    password: str
+
+
+class SignupResponse(BaseModel):
+    """Signup response schema."""
+
+    model_config = ConfigDict(strict=True)
+
+    message: str

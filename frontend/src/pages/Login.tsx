@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -15,9 +15,12 @@ import {
 
 function Login() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const confirmed = searchParams.get("confirmed");
   const { login, isLoading, error, clearError } = useAuthStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [successMessage] = useState(confirmed ? "Account confirmed! Please sign in." : "");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,6 +44,11 @@ function Login() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {successMessage && (
+              <div className="p-3 text-sm text-green-600 bg-green-50 rounded-md">
+                {successMessage}
+              </div>
+            )}
             {error && (
               <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
                 {error}
@@ -78,7 +86,10 @@ function Login() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
             <p className="text-sm text-muted-foreground text-center">
-              Demo: admin / admin123
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-primary hover:underline">
+                Sign up
+              </Link>
             </p>
           </CardFooter>
         </form>

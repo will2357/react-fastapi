@@ -70,6 +70,86 @@ class TestAuthEndpointsE2E:
         assert response.status_code == 401
 
 
+class TestSignupEndpointsE2E:
+    """E2E tests for signup endpoints."""
+
+    def test_signup_and_confirm_flow(self, client: TestClient, db_session):
+        """Test complete signup and confirmation flow."""
+        from app.models import User
+
+        # Step 1: Signup new user
+        signup_response = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "e2e_signup_user",
+                "email": "e2e_signup@example.com",
+                "password": "signup123",
+            },
+        )
+        assert signup_response.status_code == 201
+        assert "message" in signup_response.json()
+
+        # Step 2: Find the user and their confirmation token
+        user = db_session.query(User).filter(User.username == "e2e_signup_user").first()
+        assert user is not None
+        assert user.is_active is False
+        assert user.confirmation_token is not None
+
+        # Step 3: Confirm signup with token
+        confirm_response = client.get(f"/api/v1/auth/confirm/{user.confirmation_token}")
+        assert confirm_response.status_code == 200  # Returns JSON response
+        assert confirm_response.json()["message"] == "Account confirmed successfully"
+
+        # Step 4: Verify user is now active
+        db_session.refresh(user)
+        assert user.is_active is True
+        assert user.confirmation_token is None
+
+        # Step 5: Login should now work
+        login_response = client.post(
+            "/api/v1/auth/login",
+            data={"username": "e2e_signup_user", "password": "signup123"},
+        )
+        assert login_response.status_code == 200
+        assert "access_token" in login_response.json()
+
+    def test_signup_duplicate_username_email(self, client: TestClient):
+        """Test signup with duplicate username and email."""
+        # First signup
+        client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "duplicate_test",
+                "email": "duplicate@example.com",
+                "password": "password123",
+            },
+        )
+
+        # Try duplicate username
+        response1 = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "duplicate_test",
+                "email": "another@example.com",
+                "password": "password123",
+            },
+        )
+        assert response1.status_code == 400
+        assert response1.json()["detail"] == "Username already taken"
+
+        # Try duplicate email
+        response2 = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "another_user",
+                "email": "duplicate@example.com",
+                "password": "password123",
+            },
+        )
+        assert response2.status_code == 400
+        assert response2.json()["detail"] == "Email already registered"
+
+
 class TestItemsEndpointsE2E:
     """E2E tests for items endpoints."""
 

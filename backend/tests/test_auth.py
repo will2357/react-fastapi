@@ -1,5 +1,7 @@
 """Test authentication and JWT functionality."""
 
+from datetime import UTC, datetime, timedelta
+
 from fastapi.testclient import TestClient
 
 from app.core.security import (
@@ -168,3 +170,171 @@ class TestProtectedEndpoints:
         )
         assert response.status_code == 401
         assert response.json()["detail"] == "Could not validate credentials"
+
+
+class TestSignupEndpoint:
+    """Test user signup endpoint."""
+
+    def test_signup_success(self, client: TestClient):
+        """Test successful user signup."""
+        response = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "newuser",
+                "email": "newuser@example.com",
+                "password": "newpassword123",
+            },
+        )
+        assert response.status_code == 201
+        data = response.json()
+        assert "message" in data
+        assert "email" in data["message"].lower() or "confirm" in data["message"].lower()
+
+    def test_signup_duplicate_username(self, client: TestClient):
+        """Test signup with duplicate username."""
+        response = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "test_admin",
+                "email": "different@example.com",
+                "password": "password123",
+            },
+        )
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Username already taken"
+
+    def test_signup_duplicate_email(self, client: TestClient):
+        """Test signup with duplicate email."""
+        response = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "newuser2",
+                "email": "test_admin@example.com",
+                "password": "password123",
+            },
+        )
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Email already registered"
+
+    def test_signup_inactive_user_cannot_login(self, client: TestClient, db_session):
+        """Test that signup creates inactive user who cannot login."""
+        # Signup new user
+        signup_response = client.post(
+            "/api/v1/auth/signup",
+            json={
+                "username": "inactive_user",
+                "email": "inactive@example.com",
+                "password": "password123",
+            },
+        )
+        assert signup_response.status_code == 201
+
+        # Try to login - should fail because user is inactive
+        login_response = client.post(
+            "/api/v1/auth/login",
+            data={"username": "inactive_user", "password": "password123"},
+        )
+        assert login_response.status_code == 401
+        assert "activate" in login_response.json()["detail"].lower()
+
+
+class TestConfirmSignupEndpoint:
+    """Test email confirmation endpoint."""
+
+    def test_confirm_signup_success(self, client: TestClient, db_session):
+        """Test successful email confirmation."""
+        from app.core.security import get_password_hash
+        from app.models import User
+
+        # Create user with confirmation token directly in DB
+        user = User(
+            username="confirm_user",
+            email="confirm@example.com",
+            hashed_password=get_password_hash("password123"),
+            is_active=False,
+            confirmation_token="test-token-123",
+        )
+        db_session.add(user)
+        db_session.commit()
+
+        # Confirm signup
+        response = client.get("/api/v1/auth/confirm/test-token-123")
+        assert response.status_code == 200  # Returns JSON response
+        assert response.json()["message"] == "Account confirmed successfully"
+
+        # Check user is now active
+        db_session.refresh(user)
+        assert user.is_active is True
+        assert user.confirmation_token is None
+
+    def test_confirm_signup_invalid_token(self, client: TestClient):
+        """Test confirmation with invalid token."""
+        response = client.get("/api/v1/auth/confirm/invalid-token")
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Invalid confirmation token"
+
+    def test_confirm_signup_already_confirmed(self, client: TestClient, db_session):
+        """Test confirming already confirmed user returns success."""
+        from app.core.security import get_password_hash
+        from app.models import User
+
+        user = User(
+            username="already_confirmed",
+            email="already@example.com",
+            hashed_password=get_password_hash("password123"),
+            is_active=True,
+            confirmation_token="already-used-token",
+        )
+        db_session.add(user)
+        db_session.commit()
+
+        response = client.get("/api/v1/auth/confirm/already-used-token")
+        assert response.status_code == 200
+        assert "message" in response.json()
+
+    def test_confirm_signup_expired_token(self, client: TestClient, db_session):
+        """Test confirmation with expired token."""
+        from app.core.security import get_password_hash
+        from app.models import User
+
+        user = User(
+            username="expired_token_user",
+            email="expired@example.com",
+            hashed_password=get_password_hash("password123"),
+            is_active=False,
+            confirmation_token="expired-token-123",
+            confirmation_token_expires=datetime.now(UTC) - timedelta(hours=1),
+        )
+        db_session.add(user)
+        db_session.commit()
+
+        response = client.get("/api/v1/auth/confirm/expired-token-123")
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Confirmation token has expired"
+
+    def test_confirm_signup_activate_user_can_login(self, client: TestClient, db_session):
+        """Test that confirmed user can login."""
+        from app.core.security import get_password_hash
+        from app.models import User
+
+        # Create user with confirmation token
+        user = User(
+            username="login_after_confirm",
+            email="loginconfirm@example.com",
+            hashed_password=get_password_hash("password123"),
+            is_active=False,
+            confirmation_token="confirm-token-456",
+        )
+        db_session.add(user)
+        db_session.commit()
+
+        # Confirm signup - don't follow redirects
+        client.get("/api/v1/auth/confirm/confirm-token-456", follow_redirects=False)
+
+        # Now login should work
+        login_response = client.post(
+            "/api/v1/auth/login",
+            data={"username": "login_after_confirm", "password": "password123"},
+        )
+        assert login_response.status_code == 200
+        assert "access_token" in login_response.json()
