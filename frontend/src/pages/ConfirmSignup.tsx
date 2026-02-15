@@ -21,7 +21,7 @@ function ConfirmSignup() {
 
   useEffect(() => {
     if (confirmed.current) return;
-    
+
     const confirmSignup = async () => {
       const token = searchParams.get("token");
       if (!token) {
@@ -82,9 +82,7 @@ function ConfirmSignup() {
             <CardTitle className="text-2xl text-center text-destructive">
               Confirmation Failed
             </CardTitle>
-            <CardDescription className="text-center">
-              {errorMessage}
-            </CardDescription>
+            <CardDescription className="text-center">{errorMessage}</CardDescription>
           </CardHeader>
           <CardFooter>
             <Button className="w-full" onClick={() => navigate("/signup")}>
@@ -100,9 +98,7 @@ function ConfirmSignup() {
     <div className="min-h-screen flex items-center justify-center bg-secondary p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center text-green-600">
-            Account Confirmed!
-          </CardTitle>
+          <CardTitle className="text-2xl text-center text-green-600">Account Confirmed!</CardTitle>
           <CardDescription className="text-center">
             Your account has been successfully confirmed. You can now log in.
           </CardDescription>

@@ -42,9 +42,9 @@ describe("apiClient", () => {
 
     const mockRequestInterceptor = apiClient.interceptors.request.handlers[0];
     const config: InternalAxiosRequestConfig = { headers: {} };
-    
+
     await mockRequestInterceptor.fulfilled(config);
-    
+
     expect(config.headers).toHaveProperty("Authorization", "Bearer mock-token");
   });
 
@@ -53,16 +53,16 @@ describe("apiClient", () => {
 
     const mockRequestInterceptor = apiClient.interceptors.request.handlers[0];
     const config: InternalAxiosRequestConfig = { headers: {} };
-    
+
     await mockRequestInterceptor.fulfilled(config);
-    
+
     expect(config.headers).not.toHaveProperty("Authorization");
   });
 
   it("passes through successful responses", async () => {
     const mockResponseInterceptor = apiClient.interceptors.response.handlers[0];
     const response = { data: "test" };
-    
+
     const result = await mockResponseInterceptor.fulfilled(response);
     expect(result).toEqual(response);
   });

@@ -71,10 +71,7 @@ describe("useAuthStore", () => {
     await login("admin", "admin123");
 
     expect(mockSetItem).toHaveBeenCalledWith("token", "mock-token");
-    expect(mockSetItem).toHaveBeenCalledWith(
-      "user",
-      JSON.stringify({ username: "admin" })
-    );
+    expect(mockSetItem).toHaveBeenCalledWith("user", JSON.stringify({ username: "admin" }));
   });
 
   it("sets user correctly", async () => {
@@ -98,14 +95,18 @@ describe("useAuthStore", () => {
   });
 
   it("throws error and sets error message on failed login (non-ok response)", async () => {
-    const axiosError = new Error("Request failed with status code 401") as Error & { response?: { data: { detail: string } } };
+    const axiosError = new Error("Request failed with status code 401") as Error & {
+      response?: { data: { detail: string } };
+    };
     axiosError.response = { data: { detail: "Incorrect username or password" } };
     vi.mocked(apiClient.post).mockRejectedValueOnce(axiosError);
 
     const { default: useAuthStore } = await import("../src/store/useAuthStore");
     const { login } = useAuthStore.getState();
 
-    await expect(login("admin", "wrongpassword")).rejects.toThrow("Request failed with status code 401");
+    await expect(login("admin", "wrongpassword")).rejects.toThrow(
+      "Request failed with status code 401"
+    );
 
     const state = useAuthStore.getState();
     expect(state.error).toBe("Incorrect username or password");

@@ -78,9 +78,7 @@ function Signup() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl text-center">Create an account</CardTitle>
-          <CardDescription className="text-center">
-            Enter your details to sign up
-          </CardDescription>
+          <CardDescription className="text-center">Enter your details to sign up</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -135,11 +133,7 @@ function Signup() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Sign up"}
             </Button>
             <p className="text-sm text-muted-foreground text-center">

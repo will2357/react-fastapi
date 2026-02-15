@@ -1,4 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import useAuthStore from "../store/useAuthStore";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -28,9 +29,7 @@ apiClient.interceptors.response.use(
   /* v8 ignore next 8 */
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+      useAuthStore.getState().logout();
     }
     return Promise.reject(error);
   }

@@ -1,4 +1,4 @@
-.PHONY: help install dev build test test-cov test-e2e lint lint-fix clean run
+.PHONY: help install dev build test test-cov test-e2e lint lint-fix format format-check clean run
 
 help:
 	@echo "Available commands:"
@@ -10,6 +10,8 @@ help:
 	@echo "  make test-e2e   - Run E2E integration tests"
 	@echo "  make lint       - Run ESLint"
 	@echo "  make lint-fix   - Fix ESLint issues"
+	@echo "  make format      - Format code with Prettier"
+	@echo "  make format-check - Check code formatting"
 	@echo "  make clean      - Clean build artifacts"
 	@echo "  make run        - Run production server"
 
@@ -36,6 +38,12 @@ lint:
 
 lint-fix:
 	npm run lint:fix
+
+format:
+	npm run format
+
+format-check:
+	npm run format:check
 
 clean:
 	rm -rf dist coverage node_modules/.vite

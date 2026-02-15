@@ -4,5 +4,5 @@ export default {
     tailwindcss: {},
     autoprefixer: {},
   },
-}
+};
 /* v8 ignore stop */

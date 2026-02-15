@@ -34,6 +34,8 @@ make test-watch   # Run tests in watch mode
 make test-cov     # Run tests with coverage
 make lint         # Run ESLint
 make lint-fix     # Fix ESLint issues
+make format       # Format code with Prettier
+make format-check # Check code formatting
 make clean        # Clean build artifacts
 ```
 
@@ -48,6 +50,7 @@ make clean        # Clean build artifacts
 - **React Router** - Routing
 - **Vitest** - Testing
 - **ESLint** - Linting
+- **Prettier** - Code formatting
 
 ## Project Structure
 

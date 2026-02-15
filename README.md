@@ -76,6 +76,8 @@ make test-watch   # Run tests in watch mode
 make test-cov     # Run tests with coverage
 make lint         # Run ESLint
 make lint-fix     # Fix ESLint issues
+make format       # Format code with Prettier
+make format-check # Check code formatting
 make clean        # Clean build artifacts
 ```
 
@@ -156,10 +158,14 @@ cd frontend
 
 npm run lint
 npm run lint:fix
+npm run format
+npm run format:check
 
 # Or use Makefile
 make lint
 make lint-fix
+make format
+make format-check
 ```
 
 ## Project Structure
@@ -206,6 +212,7 @@ make lint-fix
 - React Router
 - Vitest
 - ESLint
+- Prettier
 
 ## API Endpoints
 

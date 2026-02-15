@@ -1,12 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { LogOut, User } from "lucide-react";
 
 function Dashboard() {
@@ -30,11 +25,7 @@ function Dashboard() {
               <User className="h-4 w-4" />
               <span>{user?.username}</span>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-            >
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Log out
             </Button>
