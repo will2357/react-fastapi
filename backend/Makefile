@@ -1,5 +1,10 @@
 .PHONY: help install dev build test test-cov lint lint-fix clean run
 
+SHELL = /bin/bash
+
+include .env.test
+include .env.dev
+
 help:
 	@echo "Available commands:"
 	@echo "  make install    - Sync Python dependencies (uv sync)"
@@ -16,22 +21,25 @@ install:
 	uv sync
 
 dev:
-	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	source .venv/bin/activate && uvicorn app.main:app --reload --host 0.0.0.0 \
+		--port $(DEV_BACKEND_PORT)
 
 build:
 	@echo "No build step required for Python"
 
 test:
-	DATABASE_URL="postgresql://test:password@localhost:5432/api_test" python -m pytest -v
+	source .venv/bin/activate && DATABASE_URL=$(TEST_DATABASE_URL) \
+		python -m pytest -v
 
 test-cov:
-	DATABASE_URL="postgresql://test:password@localhost:5432/api_test" python -m pytest --cov=app --cov-report=term-missing tests/
+	source .venv/bin/activate && DATABASE_URL=$(TEST_DATABASE_URL) \
+		python -m pytest --cov=app --cov-report=term-missing tests/
 
 lint:
-	ruff check .
+	source .venv/bin/activate && ruff check .
 
 lint-fix:
-	ruff check --fix .
+	source .venv/bin/activate && ruff check --fix .
 
 clean:
 	rm -rf .pytest_cache
@@ -46,4 +54,5 @@ clean:
 	rm -rf .coverage
 
 run:
-	uvicorn app.main:app --host 0.0.0.0 --port 8000
+	source .venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 \
+		--port $(DEV_BACKEND_PORT)

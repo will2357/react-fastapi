@@ -2,6 +2,9 @@
 
 SHELL = /bin/bash
 
+include ./frontend/.env.test
+include ./backend/.env.test
+
 help:
 	@echo "Full-Stack App - Development Commands"
 	@echo ""
@@ -28,7 +31,8 @@ test-backend:
 	cd backend && source .venv/bin/activate && make test
 
 test-frontend:
-	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && make test
+	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \
+		. "$$NVM_DIR/nvm.sh" && nvm use && make test
 
 test: test-backend test-frontend
 
@@ -36,7 +40,8 @@ test-cov-backend:
 	cd backend && source .venv/bin/activate && make test-cov
 
 test-cov-frontend:
-	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && make test-cov
+	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \
+		. "$$NVM_DIR/nvm.sh" && nvm use && make test-cov
 
 test-cov: test-cov-backend test-cov-frontend
 
@@ -44,7 +49,8 @@ lint-backend:
 	cd backend && source .venv/bin/activate && make lint
 
 lint-frontend:
-	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && make lint
+	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \
+		. "$$NVM_DIR/nvm.sh" && nvm use && make lint
 
 lint: lint-backend lint-frontend
 
@@ -52,26 +58,39 @@ lint-fix-backend:
 	cd backend && source .venv/bin/activate && make lint-fix
 
 lint-fix-frontend:
-	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && make lint-fix
+	cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \
+		. "$$NVM_DIR/nvm.sh" && nvm use && make lint-fix
 
 lint-fix: lint-fix-backend lint-fix-frontend
 
 test-integration:
+	echo "DB URL $(TEST_DATABASE_URL)"
 	@echo "Resetting database for integration tests..."
-	@PGPASSWORD=password psql -U test -d api_test -h localhost -c "DROP TABLE IF EXISTS items CASCADE; DROP TABLE IF EXISTS users CASCADE; DROP TABLE IF EXISTS alembic_version CASCADE;"
 	@echo "Running database migrations for test..."
-	@cd backend && source .venv/bin/activate && DATABASE_URL='postgresql://test:password@localhost:5432/api_test' alembic upgrade head
+	@psql $(TEST_DATABASE_URL) -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+	@cd backend && source .venv/bin/activate && DATABASE_URL=$(TEST_DATABASE_URL) \
+		alembic upgrade head
 	@echo "Seeding test database..."
-	@cd backend && source .venv/bin/activate && DATABASE_URL='postgresql://test:password@localhost:5432/api_test' python scripts/seed_test.py
+	@cd backend && source .venv/bin/activate && DATABASE_URL=$(TEST_DATABASE_URL) \
+		python scripts/seed_test.py
 	@echo "Starting backend server..."
-	@(cd backend && source .venv/bin/activate && CORS_ORIGINS='["http://localhost:5174"]' SECRET_KEY='test-secret-key' DATABASE_URL='postgresql://test:password@localhost:5432/api_test' python -m uvicorn app.main:app --port 8001) &
+	@(cd backend && source .venv/bin/activate && CORS_ORIGINS='$(CORS_ORIGINS)' \
+		SECRET_KEY=$(TEST_SECRET_KEY) DATABASE_URL=$(TEST_DATABASE_URL) \
+		python -m uvicorn app.main:app --port $(TEST_BACKEND_PORT)) &
 	@sleep 3
 	@echo "Starting frontend server..."
-	@(cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && VITE_API_URL='http://localhost:8001' npm run test:server) &
+	@(cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \
+		. "$$NVM_DIR/nvm.sh" && nvm use && VITE_API_URL=$(VITE_API_URL) \
+		npm run test:server) &
 	@sleep 5
 	@echo "Running E2E tests..."
-	@cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && nvm use && npm run test:e2e; TEST_EXIT=$$?; \
-	kill $$(lsof -t -i:8001) 2>/dev/null || true; \
-	kill $$(lsof -t -i:5174) 2>/dev/null || true; \
-	echo "Cleanup complete."; \
-	exit $$TEST_EXIT
+	@cd frontend && export NVM_DIR="$$HOME/.nvm" && [ -s "$$NVM_DIR/nvm.sh" ] && \
+		. "$$NVM_DIR/nvm.sh" && nvm use && npm run test:e2e; TEST_EXIT=$$?; \
+		kill $$(lsof -t -i:$(TEST_BACKEND_PORT)) 2>/dev/null || true; \
+		kill $$(lsof -t -i:$(VITE_FRONTEND_PORT)) 2>/dev/null || true; \
+		echo "Cleanup complete."; \
+		exit $$TEST_EXIT
+	@sleep 1
+	@echo
+
+test-all: test-backend test-frontend test-integration

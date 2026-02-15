@@ -12,13 +12,14 @@
     "test": "vitest --run --config vitest.config.mts",
     "test:watch": "vitest --watch --config vitest.config.mts",
     "test:coverage": "vitest --run --config vitest.config.mts --coverage",
-    "test:server": "vite --port 5174",
+    "test:server": "dotenv -e .env.test -- sh -c 'vite --port $TEST_PORT --clearScreen false'",
     "test:e2e": "npx --yes playwright test --config=tests/e2e/playwright.config.ts"
   },
   "dependencies": {
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv-cli": "^11.0.0",
     "lucide-react": "^0.564.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
