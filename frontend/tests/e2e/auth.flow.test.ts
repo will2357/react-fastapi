@@ -21,7 +21,7 @@ test.describe('Authentication Flow', () => {
     await page.fill('input[id="password"]', 'wrong');
     await page.click('button[type="submit"]');
     
-    await expect(page.locator('text=Invalid username or password')).toBeVisible();
+    await expect(page.getByText(/incorrect username or password/i)).toBeVisible({ timeout: 15000 });
   });
 
   test('logout redirects to login', async ({ page }) => {

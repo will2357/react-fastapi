@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import apiClient from "../api/client";
 
 export interface User {
   username: string;
@@ -43,20 +44,17 @@ const useAuthStore = create<AuthState>()(
           formData.append("username", username);
           formData.append("password", password);
 
-          const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/v1/auth/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: formData,
-          });
+          const response = await apiClient.post<{ access_token: string }>(
+            "/api/v1/auth/login",
+            formData,
+            {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            }
+          );
 
-          if (!response.ok) {
-            throw new Error("Invalid username or password");
-          }
-
-          const data = await response.json();
-          const token = data.access_token;
+          const token = response.data.access_token;
 
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify({ username }));
@@ -68,8 +66,15 @@ const useAuthStore = create<AuthState>()(
             isLoading: false,
           });
         } catch (error) {
+          let errorMessage = "Login failed";
+          const err = error as { response?: { data?: { detail?: string } }; message?: string };
+          if (err.response?.data?.detail) {
+            errorMessage = err.response.data.detail;
+          } else if (err.message) {
+            errorMessage = err.message;
+          }
           set({
-            error: error instanceof Error ? error.message : "Login failed",
+            error: errorMessage,
             isLoading: false,
           });
           throw error;
@@ -95,6 +100,7 @@ const useAuthStore = create<AuthState>()(
         token: state.token,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
+        error: state.error,
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHydrated();

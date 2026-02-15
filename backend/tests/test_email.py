@@ -2,8 +2,6 @@
 
 from unittest.mock import MagicMock, patch
 
-import pytest  # noqa: F401
-
 from app.services.email import send_confirmation_email, send_email
 
 

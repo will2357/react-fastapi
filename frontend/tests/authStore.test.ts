@@ -1,4 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import apiClient from "../src/api/client";
+
+vi.mock("../src/api/client", () => ({
+  default: {
+    post: vi.fn(),
+  },
+}));
 
 const mockSetItem = vi.fn();
 const mockGetItem = vi.fn();
@@ -9,8 +16,6 @@ vi.stubGlobal("localStorage", {
   getItem: mockGetItem,
   removeItem: mockRemoveItem,
 });
-
-vi.stubGlobal("fetch", vi.fn());
 
 describe("useAuthStore", () => {
   beforeEach(() => {
@@ -56,10 +61,9 @@ describe("useAuthStore", () => {
   });
 
   it("stores token in localStorage on login", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ access_token: "mock-token" }),
-    } as Response);
+    vi.mocked(apiClient.post).mockResolvedValueOnce({
+      data: { access_token: "mock-token" },
+    });
 
     const { default: useAuthStore } = await import("../src/store/useAuthStore");
     const { login } = useAuthStore.getState();
@@ -94,36 +98,37 @@ describe("useAuthStore", () => {
   });
 
   it("throws error and sets error message on failed login (non-ok response)", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 401,
-    } as Response);
+    const axiosError = new Error("Request failed with status code 401") as Error & { response?: { data: { detail: string } } };
+    axiosError.response = { data: { detail: "Incorrect username or password" } };
+    vi.mocked(apiClient.post).mockRejectedValueOnce(axiosError);
 
     const { default: useAuthStore } = await import("../src/store/useAuthStore");
     const { login } = useAuthStore.getState();
 
-    await expect(login("admin", "wrongpassword")).rejects.toThrow("Invalid username or password");
+    await expect(login("admin", "wrongpassword")).rejects.toThrow("Request failed with status code 401");
 
     const state = useAuthStore.getState();
-    expect(state.error).toBe("Invalid username or password");
+    expect(state.error).toBe("Incorrect username or password");
     expect(state.isLoading).toBe(false);
   });
 
   it("throws error and sets error message on network failure", async () => {
-    vi.mocked(fetch).mockRejectedValueOnce(new Error("Network error"));
+    const error = new Error("Network Error");
+    (error as unknown as { isAxiosError: boolean }).isAxiosError = true;
+    vi.mocked(apiClient.post).mockRejectedValueOnce(error);
 
     const { default: useAuthStore } = await import("../src/store/useAuthStore");
     const { login } = useAuthStore.getState();
 
-    await expect(login("admin", "admin123")).rejects.toThrow("Network error");
+    await expect(login("admin", "admin123")).rejects.toThrow("Network Error");
 
     const state = useAuthStore.getState();
-    expect(state.error).toBe("Network error");
+    expect(state.error).toBe("Network Error");
     expect(state.isLoading).toBe(false);
   });
 
   it("sets generic error message on non-Error exception", async () => {
-    vi.mocked(fetch).mockRejectedValueOnce("string error");
+    vi.mocked(apiClient.post).mockRejectedValueOnce("string error");
 
     const { default: useAuthStore } = await import("../src/store/useAuthStore");
     const { login } = useAuthStore.getState();
