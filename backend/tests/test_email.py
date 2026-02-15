@@ -1,9 +1,10 @@
 """Test email service."""
 
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from app.services.email import send_email, send_confirmation_email
+import pytest  # noqa: F401
+
+from app.services.email import send_confirmation_email, send_email
 
 
 class TestSendEmail:

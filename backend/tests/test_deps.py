@@ -1,11 +1,11 @@
 """Test authentication dependencies."""
 
-import pytest
 import asyncio
-from unittest.mock import patch, MagicMock
+
+import pytest
 from fastapi import HTTPException
 
-from app.api.deps import get_current_user, get_current_active_user
+from app.api.deps import get_current_active_user, get_current_user
 from app.core.security import create_access_token
 from app.schemas.auth import User
 

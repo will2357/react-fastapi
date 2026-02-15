@@ -4,9 +4,10 @@ from datetime import UTC, datetime, timedelta
 from typing import Annotated
 from uuid import uuid4
 
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+from jwt import PyJWTError as JWTError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -171,27 +172,3 @@ def confirm_signup(
 
     logger.info("user_confirmed", username=user.username)
     return {"message": "Account confirmed successfully"}
-
-    # Already confirmed
-    if user.is_active:
-        from fastapi.responses import RedirectResponse
-
-        return RedirectResponse(url=f"{settings.CORS_ORIGINS[0]}/login?confirmed=true")
-
-    # Check if token expired
-    if user.confirmation_token_expires and user.confirmation_token_expires < datetime.now(UTC):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Confirmation token has expired",
-        )
-
-    # Activate user
-    user.is_active = True
-    user.confirmation_token = None
-    user.confirmation_token_expires = None
-    db.commit()
-
-    logger.info("user_confirmed", username=user.username)
-    from fastapi.responses import RedirectResponse
-
-    return RedirectResponse(url=f"{settings.CORS_ORIGINS[0]}/login?confirmed=true")
