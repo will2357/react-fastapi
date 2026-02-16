@@ -3,7 +3,7 @@
 SHELL = /bin/bash
 
 include .env.test
-include .env.dev
+include .env.development
 
 help:
 	@echo "Available commands:"

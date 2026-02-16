@@ -172,37 +172,36 @@ curl http://localhost:8000/api/v1/items/protected-items \
 
 ## Environment Variables
 
-Create `.env.dev` in backend directory:
+Copy `.env` to `.env.development` in backend directory:
 
 ```bash
+cp .env .env.development
+# Then edit .env.development with your values
+```
+
+The template `.env` includes all available variables:
+```bash
+ENVIRONMENT="development"
 PROJECT_NAME="FastAPI Backend"
 API_V1_STR="/api/v1"
+DEV_BACKEND_PORT=8000
+BACKEND_PORT=${DEV_BACKEND_PORT}
 CORS_ORIGINS=["http://localhost:5173"]
 LOG_LEVEL="INFO"
 LOG_JSON_FORMAT=false
-SECRET_KEY="your-secret-key"
-DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"
+SECRET_KEY="your-secret-key-change-in-production"
+DATABASE_URL="postgresql://dev:password@localhost:5432/api_dev"
 
-# SMTP Configuration (for email confirmation)
+# SMTP Configuration (optional - leave empty to disable emails)
 SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
-SMTP_USER="your-email@gmail.com"
-SMTP_PASSWORD="your-app-password"
-SMTP_FROM_EMAIL="noreply@yourdomain.com"
-SMTP_FROM_NAME="App Name"
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_FROM_EMAIL=noreply@example.com
+SMTP_FROM_NAME=App Name
 ```
 
-For testing, create `.env.test`:
-
-```bash
-PROJECT_NAME="FastAPI Backend"
-API_V1_STR="/api/v1"
-CORS_ORIGINS=["http://localhost:5174"]
-LOG_LEVEL="INFO"
-LOG_JSON_FORMAT=false
-SECRET_KEY="test-secret-key"
-DATABASE_URL="postgresql://test:password@localhost:5432/api_test"
-```
+For testing, `.env.test` is already included in the repository.
 
 ## Database Setup
 

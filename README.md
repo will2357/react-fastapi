@@ -258,26 +258,26 @@ The dev and test databases are seeded with users via seed scripts:
 
 ### Backend
 
-Create `.env.dev` in backend directory (or copy from `.env.dev.example`):
+Copy `.env` to `.env.development` in backend directory:
 
 ```bash
-PROJECT_NAME="FastAPI Backend"
-API_V1_STR="/api/v1"
-CORS_ORIGINS=["http://localhost:5173"]
-LOG_LEVEL="INFO"
-LOG_JSON_FORMAT=false
-SECRET_KEY="your-secret-key"
-DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"
+cp backend/.env backend/.env.development
+# Then edit backend/.env.development with your values
 ```
 
-For testing, use `.env.test` with `CORS_ORIGINS=["http://localhost:5174"]` and `DATABASE_URL="postgresql://test:password@localhost:5432/api_test"`.
+The template `.env` includes all available variables. Copy it to `.env.development` for development.
+
+For testing, `.env.test` is already included in the repository.
 
 ### Frontend
 
-Create `.env.dev` in frontend directory:
+Copy `.env` to `.env.development` in frontend directory:
 
 ```bash
-VITE_API_URL=http://localhost:8000
+cp frontend/.env frontend/.env.development
+# Then edit frontend/.env.development with your values
 ```
 
-For testing, create `.env.test` with `VITE_API_URL=http://localhost:8001`.
+The template `.env` includes all available variables. Copy it to `.env.development` for development.
+
+For testing, `.env.test` is already included in the repository.

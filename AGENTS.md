@@ -117,13 +117,13 @@ frontend/
 
 ## Environment
 
-**Backend (.env.dev / .env.test)**:
-- `.env.dev` - Development: `CORS_ORIGINS=["http://localhost:5173"]`, `DATABASE_URL="postgresql://dev:argyle@localhost:5432/api_dev"`
-- `.env.test` - Testing: `CORS_ORIGINS=["http://localhost:5174"]`, `DATABASE_URL="postgresql://test:password@localhost:5432/api_test"`
+**Backend (.env / .env.test)**:
+- `.env` - Template included in repo (developer copies to `.env.local` for dev)
+- `.env.test` - Already included in repo for testing
 
-**Frontend (.env.dev / .env.test)**:
-- `.env.dev`: `VITE_API_URL=http://localhost:8000`
-- `.env.test`: `VITE_API_URL=http://localhost:8001`
+**Frontend (.env / .env.test)**:
+- `.env` - Template included in repo (developer copies to `.env.local` for dev)
+- `.env.test` - Already included in repo for testing
 
 ---
 
