@@ -130,6 +130,7 @@ frontend/
 ## Testing Requirements
 
 - **All new features need tests**
+- **All new features MUST include E2E tests** in `frontend/tests/e2e/`
 - Backend: >90% coverage target
 - Frontend: >90% coverage target
 - Tests must pass before committing (see Pre-Commit Requirements)
@@ -146,7 +147,7 @@ Before creating a commit:
 3. **Run linters and fix any issues**:
    - Backend: `cd backend && make lint`
    - Frontend: `cd frontend && nvm use && make lint`
-4. **Run E2E tests (optional but recommended)**:
+4. **Run E2E tests (REQUIRED)**:
    - `make test-integration` (runs Playwright E2E tests)
 5. **Update documentation** if the changes affect:
    - README.md (root)

@@ -112,7 +112,7 @@ class TestErrorHandling:
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
 
-        response = client.post("/api/v1/items/items", json={"invalid": "data"}, headers=headers)
+        response = client.post("/api/v1/items", json={"invalid": "data"}, headers=headers)
         assert response.status_code == 422
         assert "detail" in response.json()
         assert "errors" in response.json()

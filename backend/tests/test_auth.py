@@ -140,7 +140,7 @@ class TestProtectedEndpoints:
 
     def test_protected_endpoint_without_token(self, client: TestClient):
         """Test accessing protected endpoint without token."""
-        response = client.get("/api/v1/items/protected-items")
+        response = client.get("/api/v1/items")
         assert response.status_code == 401
         assert response.json()["detail"] == "Not authenticated"
 
@@ -154,18 +154,17 @@ class TestProtectedEndpoints:
 
         # Access protected endpoint with token
         response = client.get(
-            "/api/v1/items/protected-items",
+            "/api/v1/items",
             headers={"Authorization": f"Bearer {token}"},
         )
         assert response.status_code == 200
         data = response.json()
-        assert "Hello test_admin" in data["message"]
-        assert "items" in data
+        assert isinstance(data, list)
 
     def test_protected_endpoint_with_invalid_token(self, client: TestClient):
         """Test accessing protected endpoint with invalid token."""
         response = client.get(
-            "/api/v1/items/protected-items",
+            "/api/v1/items",
             headers={"Authorization": "Bearer invalid_token"},
         )
         assert response.status_code == 401

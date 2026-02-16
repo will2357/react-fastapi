@@ -15,7 +15,7 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 
-@router.get("/items/{item_id}")
+@router.get("/{item_id}")
 def read_item(
     item_id: int,
     current_user: Annotated[User, Depends(get_current_active_user)],
@@ -28,7 +28,7 @@ def read_item(
     return {"item_id": item.id, "name": item.name, "price": item.price}
 
 
-@router.post("/items", response_model=ItemResponse)
+@router.post("", response_model=ItemResponse)
 def create_item(
     item: ItemCreate,
     current_user: Annotated[User, Depends(get_current_active_user)],
@@ -43,15 +43,12 @@ def create_item(
     return ItemResponse(item_id=db_item.id, name=db_item.name, price=db_item.price)
 
 
-@router.get("/protected-items")
-def read_protected_items(
+@router.get("")
+def read_items(
     current_user: Annotated[User, Depends(get_current_active_user)],
     db: Session = Depends(get_db),
 ):
-    """Example protected endpoint requiring authentication."""
+    """Get all items for the authenticated user."""
     items = db.query(Item).all()
-    logger.info("protected_endpoint_accessed", username=current_user.username)
-    return {
-        "message": f"Hello {current_user.username}, you accessed a protected endpoint",
-        "items": [{"id": item.id, "name": item.name, "price": item.price} for item in items],
-    }
+    logger.info("items_fetched", username=current_user.username, count=len(items))
+    return [{"item_id": item.id, "name": item.name, "price": item.price} for item in items]

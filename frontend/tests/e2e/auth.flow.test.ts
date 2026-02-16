@@ -11,7 +11,7 @@ test.describe("Authentication Flow", () => {
     await page.click('button[type="submit"]');
 
     await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 10000 });
-    await expect(page.locator("h3")).toContainText("Welcome, e2e_user!");
+    await expect(page.getByRole("heading", { name: "Welcome, e2e_user!" })).toBeVisible();
   });
 
   test("invalid login shows error message", async ({ page }) => {
