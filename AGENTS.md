@@ -88,14 +88,14 @@ backend/
 │   ├── api/
 │   │   ├── deps.py         # Dependencies (auth)
 │   │   └── v1/
-│   │       ├── api.py     # Router aggregation
-│   │       └── endpoints/ # Feature endpoints
+│   │       ├── api.py      # Router aggregation
+│   │       └── endpoints/   # Feature endpoints
 │   ├── core/
-│   │   ├── config.py      # Settings
-│   │   ├── exceptions.py  # Custom exceptions
-│   │   ├── logging.py    # Structlog setup
-│   │   ├── middleware.py # Middleware
-│   │   └── security.py   # JWT & password utils
+│   │   ├── config.py       # Settings
+│   │   ├── exceptions.py   # Custom exceptions
+│   │   ├── logging.py      # Structlog setup
+│   │   ├── middleware.py   # Middleware
+│   │   └── security.py     # JWT & password utils
 │   └── schemas/            # Pydantic models
 ├── tests/                  # Test files
 ├── Makefile, pyproject.toml, ruff.toml
@@ -106,10 +106,10 @@ frontend/
 │   ├── components/       # Reusable components
 │   ├── pages/           # Page components
 │   ├── store/           # Zustand stores
-│   ├── App.tsx         # Router
-│   └── main.tsx        # Entry
+│   ├── App.tsx          # Router
+│   └── main.tsx         # Entry
 ├── tests/               # Test files (unit)
-├── tests/e2e/          # E2E tests (vitest browser)
+├── tests/e2e/           # E2E tests (vitest browser)
 ├── Makefile, package.json, vite.config.ts, vitest.config.ts
 ```
 
@@ -135,25 +135,69 @@ frontend/
 - Frontend: >90% coverage target
 - Tests must pass before committing (see Pre-Commit Requirements)
 
+### Test Naming Conventions
+
+- Backend: `tests/test_<feature>.py` or `tests/api/v1/test_<feature>.py`
+- Frontend unit: `tests/<feature>.test.ts` or `tests/<feature>.test.tsx`
+- Frontend E2E: `tests/e2e/<feature>.test.ts`
+
 ---
 
 ## Pre-Commit Requirements
 
-Before creating a commit:
-1. **ALWAYS use the pre-commit-checklist skill** before proceeding (use the `/` command to invoke it)
-2. **Run all tests and ensure they pass**:
-   - Backend: `cd backend && make test`
-   - Frontend: `cd frontend && nvm use && make test`
-3. **Run linters and fix any issues**:
-   - Backend: `cd backend && make lint`
-   - Frontend: `cd frontend && nvm use && make lint`
-4. **Run E2E tests (REQUIRED)**:
-   - `make test-integration` (runs Playwright E2E tests)
-5. **Update documentation** if the changes affect:
-   - README.md (root)
-   - backend/README.md
-   - frontend/README.md
-   - AGENTS.md (if process/tasks change)
+**ALWAYS follow these steps BEFORE creating a commit:**
+
+### Step 1: Run All Tests
+
+Run tests for BOTH backend and frontend and ensure they ALL pass:
+
+- **Backend**: `cd backend && source .venv/bin/activate && make test`
+- **Frontend**: `cd frontend && nvm use && make test`
+
+### Step 2: Run All Linters
+
+Run linters for BOTH backend and frontend and fix ANY issues:
+
+- **Backend**: `cd backend && source .venv/bin/activate && make lint`
+- **Frontend**: `cd frontend && nvm use && make lint`
+
+### Step 3: Run E2E Tests (REQUIRED)
+
+E2E tests are REQUIRED for all changes. E2E tests use Playwright:
+
+- Run: `make test-integration`
+- Or directly: `cd frontend && nvm use && npm run test:e2e`
+
+### Step 4: Add E2E Tests for New Features (REQUIRED)
+
+When adding new features, you MUST create E2E tests in `frontend/tests/e2e/`:
+
+- Create new test file or add tests to existing test file
+- Test the happy path and error cases
+- Use Playwright with page locators
+
+### Step 5: Update Documentation
+
+Update documentation if changes affect:
+- README.md (root)
+- backend/README.md
+- frontend/README.md
+- AGENTS.md (if process/tasks change)
+
+### Step 6: Commit
+
+After all tests pass, linters pass, E2E tests pass, and documentation is updated:
+- `git add -A && git commit -m "<message>"`
+
+---
+
+## Important Notes
+
+- **This checklist MUST be followed for EVERY commit**
+- **Do NOT skip any step**
+- If tests or linters fail, fix them before committing
+- If documentation needs updating, update it before committing
+- E2E tests are REQUIRED - do not skip them
 
 ---
 
@@ -168,3 +212,21 @@ Before creating a commit:
 
 - Meaningful commit messages
 - Follow conventional commits: `type(scope): description`
+
+### Commit Message Examples
+
+```
+feat(auth): add password reset functionality
+fix(items): correct trailing slash in API endpoint
+test(items): add CRUD tests for items API
+docs: update API documentation
+refactor: simplify authentication flow
+```
+
+---
+
+## Skills
+
+### Pre-Commit Checklist Skill
+
+The pre-commit-checklist skill can be invoked with `/` command, but all the rules are already in this AGENTS.md file. Always follow the Pre-Commit Requirements section above before committing.
