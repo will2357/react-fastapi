@@ -29,5 +29,6 @@ dist-ssr
 
 # Environment variables
 .env
-!.env.dev
+!.env
+.env.development
 !.env.test

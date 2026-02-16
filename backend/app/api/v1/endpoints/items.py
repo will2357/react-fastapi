@@ -16,7 +16,11 @@ logger = get_logger(__name__)
 
 
 @router.get("/items/{item_id}")
-def read_item(item_id: int, db: Session = Depends(get_db)):
+def read_item(
+    item_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     """Read an item by ID."""
     item = db.query(Item).filter(Item.id == item_id).first()
     if not item:
@@ -25,7 +29,11 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/items", response_model=ItemResponse)
-def create_item(item: ItemCreate, db: Session = Depends(get_db)):
+def create_item(
+    item: ItemCreate,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     """Create a new item."""
     db_item = Item(name=item.name, price=item.price)
     db.add(db_item)

@@ -1,5 +1,6 @@
 """E2E integration tests for the backend API."""
 
+import pytest
 from fastapi.testclient import TestClient
 
 
@@ -153,38 +154,50 @@ class TestSignupEndpointsE2E:
 class TestItemsEndpointsE2E:
     """E2E tests for items endpoints."""
 
-    def test_create_item(self, client: TestClient):
+    @pytest.fixture
+    def auth_headers(self, client: TestClient):
+        """Get auth headers with valid token."""
+        response = client.post(
+            "/api/v1/auth/login",
+            data={"username": "e2e_user", "password": "e2e123"},
+        )
+        token = response.json()["access_token"]
+        return {"Authorization": f"Bearer {token}"}
+
+    def test_create_item(self, client: TestClient, auth_headers):
         """Test creating a new item."""
         item_data = {"name": "E2E Test Item", "price": 99.99}
-        response = client.post("/api/v1/items/items", json=item_data)
+        response = client.post("/api/v1/items/items", json=item_data, headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
         assert data["item_id"] is not None
         assert data["name"] == "E2E Test Item"
         assert data["price"] == 99.99
 
-    def test_read_item(self, client: TestClient):
+    def test_read_item(self, client: TestClient, auth_headers):
         """Test reading an item by ID."""
         # First create an item
         item_data = {"name": "Read Test Item", "price": 50.00}
-        create_response = client.post("/api/v1/items/items", json=item_data)
+        create_response = client.post("/api/v1/items/items", json=item_data, headers=auth_headers)
         item_id = create_response.json()["item_id"]
 
         # Then read it
-        response = client.get(f"/api/v1/items/items/{item_id}")
+        response = client.get(f"/api/v1/items/items/{item_id}", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
         assert data["item_id"] == item_id
         assert data["name"] == "Read Test Item"
         assert data["price"] == 50.00
 
-    def test_read_nonexistent_item(self, client: TestClient):
+    def test_read_nonexistent_item(self, client: TestClient, auth_headers):
         """Test reading a non-existent item returns 404."""
-        response = client.get("/api/v1/items/items/99999")
+        response = client.get("/api/v1/items/items/99999", headers=auth_headers)
         assert response.status_code == 404
         assert response.json()["detail"] == "Item not found"
 
-    def test_create_item_validation_error(self, client: TestClient):
+    def test_create_item_validation_error(self, client: TestClient, auth_headers):
         """Test that invalid item data is rejected."""
-        response = client.post("/api/v1/items/items", json={"invalid": "data"})
+        response = client.post(
+            "/api/v1/items/items", json={"invalid": "data"}, headers=auth_headers
+        )
         assert response.status_code == 422

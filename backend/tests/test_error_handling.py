@@ -104,7 +104,15 @@ class TestErrorHandling:
 
     def test_validation_error_handler(self, client: TestClient):
         """Test validation error handler."""
-        response = client.post("/api/v1/items/items", json={"invalid": "data"})
+        # First login to get token
+        login_response = client.post(
+            "/api/v1/auth/login",
+            data={"username": "test_user", "password": "user123"},
+        )
+        token = login_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        response = client.post("/api/v1/items/items", json={"invalid": "data"}, headers=headers)
         assert response.status_code == 422
         assert "detail" in response.json()
         assert "errors" in response.json()

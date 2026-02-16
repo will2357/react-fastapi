@@ -1,11 +1,16 @@
 """Application configuration."""
 
+import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+env = os.getenv("ENVIRONMENT", "development")
+env_file = f".env.{env}"
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=env_file,
         case_sensitive=True,
         extra="ignore",
     )
