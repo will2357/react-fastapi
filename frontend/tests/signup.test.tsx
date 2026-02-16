@@ -158,4 +158,24 @@ describe("Signup", () => {
     );
     expect(screen.getByRole("link", { name: /sign in/i })).toHaveAttribute("href", "/login");
   });
+
+  it("shows generic error when non-Axios error occurs", async () => {
+    mockSignup.mockRejectedValueOnce(new Error("Network error"));
+
+    render(
+      <BrowserRouter>
+        <Signup />
+      </BrowserRouter>
+    );
+
+    await userEvent.type(screen.getByLabelText(/username/i), "newuser");
+    await userEvent.type(screen.getByLabelText(/email/i), "newuser@example.com");
+    await userEvent.type(screen.getByLabelText(/^password$/i), "password123");
+    await userEvent.type(screen.getByLabelText(/confirm password/i), "password123");
+    await userEvent.click(screen.getByRole("button", { name: /sign up/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("An error occurred")).toBeInTheDocument();
+    });
+  });
 });
