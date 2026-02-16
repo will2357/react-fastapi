@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { fetchItems, createItem } from "../src/api/items";
+import { fetchItems, createItem, updateItem, deleteItem } from "../src/api/items";
 import apiClient from "../src/api/client";
 
 vi.mock("../src/api/client");
@@ -52,6 +52,47 @@ describe("items API", () => {
       mockPost.mockRejectedValue(new Error("Unauthorized"));
 
       await expect(createItem({ name: "Test", price: 10 })).rejects.toThrow("Unauthorized");
+    });
+  });
+
+  describe("updateItem", () => {
+    it("updates item at correct endpoint", async () => {
+      const updateData = { name: "Updated Item", price: 25.0 };
+      const updatedItem = { item_id: 1, name: "Updated Item", price: 25.0 };
+      const mockPut = vi.mocked(apiClient.put);
+      mockPut.mockResolvedValue({ data: updatedItem });
+
+      const result = await updateItem(1, updateData);
+
+      expect(result).toEqual(updatedItem);
+      expect(mockPut).toHaveBeenCalledTimes(1);
+      expect(mockPut).toHaveBeenCalledWith("/api/v1/items/1", updateData);
+    });
+
+    it("throws error on failure", async () => {
+      const mockPut = vi.mocked(apiClient.put);
+      mockPut.mockRejectedValue(new Error("Not found"));
+
+      await expect(updateItem(1, { name: "Test", price: 10 })).rejects.toThrow("Not found");
+    });
+  });
+
+  describe("deleteItem", () => {
+    it("deletes item at correct endpoint", async () => {
+      const mockDelete = vi.mocked(apiClient.delete);
+      mockDelete.mockResolvedValue({});
+
+      await deleteItem(1);
+
+      expect(mockDelete).toHaveBeenCalledTimes(1);
+      expect(mockDelete).toHaveBeenCalledWith("/api/v1/items/1");
+    });
+
+    it("throws error on failure", async () => {
+      const mockDelete = vi.mocked(apiClient.delete);
+      mockDelete.mockRejectedValue(new Error("Not found"));
+
+      await expect(deleteItem(999)).rejects.toThrow("Not found");
     });
   });
 });

@@ -43,6 +43,41 @@ def create_item(
     return ItemResponse(item_id=db_item.id, name=db_item.name, price=db_item.price)
 
 
+@router.put("/{item_id}", response_model=ItemResponse)
+def update_item(
+    item_id: int,
+    item: ItemCreate,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    """Update an item."""
+    db_item = db.query(Item).filter(Item.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+    db_item.name = item.name
+    db_item.price = item.price
+    db.commit()
+    db.refresh(db_item)
+    logger.info("item_updated", item_id=item_id, item_name=item.name)
+    return ItemResponse(item_id=db_item.id, name=db_item.name, price=db_item.price)
+
+
+@router.delete("/{item_id}")
+def delete_item(
+    item_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    """Delete an item."""
+    db_item = db.query(Item).filter(Item.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+    db.delete(db_item)
+    db.commit()
+    logger.info("item_deleted", item_id=item_id)
+    return {"message": "Item deleted successfully"}
+
+
 @router.get("")
 def read_items(
     current_user: Annotated[User, Depends(get_current_active_user)],

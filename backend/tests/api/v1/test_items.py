@@ -83,3 +83,73 @@ class TestItemsEndpoints:
         """Test reading an item without auth returns 401."""
         response = client.get("/api/v1/items/1")
         assert response.status_code == 401
+
+    def test_update_item(self, client: TestClient, db_session, auth_headers):
+        """Test updating an item."""
+        from app.models import Item
+
+        test_item = Item(name="Original", price=10.00)
+        db_session.add(test_item)
+        db_session.commit()
+        db_session.refresh(test_item)
+
+        update_data = {"name": "Updated", "price": 25.00}
+        response = client.put(
+            f"/api/v1/items/{test_item.id}", json=update_data, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["name"] == "Updated"
+        assert data["price"] == 25.00
+
+    def test_update_item_not_found(self, client: TestClient, auth_headers):
+        """Test updating a non-existent item returns 404."""
+        response = client.put(
+            "/api/v1/items/99999", json={"name": "Test", "price": 10}, headers=auth_headers
+        )
+        assert response.status_code == 404
+
+    def test_update_item_unauthorized(self, client: TestClient, db_session, auth_headers):
+        """Test updating an item without auth returns 401."""
+        from app.models import Item
+
+        test_item = Item(name="Test", price=10.00)
+        db_session.add(test_item)
+        db_session.commit()
+
+        response = client.put(f"/api/v1/items/{test_item.id}", json={"name": "Test", "price": 10})
+        assert response.status_code == 401
+
+    def test_delete_item(self, client: TestClient, db_session, auth_headers):
+        """Test deleting an item."""
+        from app.models import Item
+
+        test_item = Item(name="To Delete", price=10.00)
+        db_session.add(test_item)
+        db_session.commit()
+        db_session.refresh(test_item)
+        item_id = test_item.id
+
+        response = client.delete(f"/api/v1/items/{item_id}", headers=auth_headers)
+        assert response.status_code == 200
+        assert response.json()["message"] == "Item deleted successfully"
+
+        # Verify item is deleted
+        get_response = client.get(f"/api/v1/items/{item_id}", headers=auth_headers)
+        assert get_response.status_code == 404
+
+    def test_delete_item_not_found(self, client: TestClient, auth_headers):
+        """Test deleting a non-existent item returns 404."""
+        response = client.delete("/api/v1/items/99999", headers=auth_headers)
+        assert response.status_code == 404
+
+    def test_delete_item_unauthorized(self, client: TestClient, db_session):
+        """Test deleting an item without auth returns 401."""
+        from app.models import Item
+
+        test_item = Item(name="Test", price=10.00)
+        db_session.add(test_item)
+        db_session.commit()
+
+        response = client.delete(f"/api/v1/items/{test_item.id}")
+        assert response.status_code == 401

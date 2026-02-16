@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-import { fetchItems, createItem, type Item } from "../api/items";
+import { fetchItems, createItem, updateItem, deleteItem, type Item } from "../api/items";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { LogOut, User, Loader2 } from "lucide-react";
+import { LogOut, User, Loader2, Pencil, Trash2 } from "lucide-react";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -16,6 +16,9 @@ function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editPrice, setEditPrice] = useState("");
 
   useEffect(() => {
     loadItems();
@@ -47,6 +50,40 @@ function Dashboard() {
       console.error("Failed to create item:", error);
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const startEdit = (item: Item) => {
+    setEditingId(item.item_id);
+    setEditName(item.name);
+    setEditPrice(item.price.toString());
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditName("");
+    setEditPrice("");
+  };
+
+  const handleUpdateItem = async (itemId: number) => {
+    try {
+      const updated = await updateItem(itemId, {
+        name: editName,
+        price: parseFloat(editPrice),
+      });
+      setItems(items.map((i) => (i.item_id === itemId ? updated : i)));
+      cancelEdit();
+    } catch (error) {
+      console.error("Failed to update item:", error);
+    }
+  };
+
+  const handleDeleteItem = async (itemId: number) => {
+    try {
+      await deleteItem(itemId);
+      setItems(items.filter((i) => i.item_id !== itemId));
+    } catch (error) {
+      console.error("Failed to delete item:", error);
     }
   };
 
@@ -131,9 +168,65 @@ function Dashboard() {
             ) : (
               <ul className="divide-y">
                 {items.map((item) => (
-                  <li key={item.item_id} className="py-3 flex justify-between items-center">
-                    <span>{item.name}</span>
-                    <span className="text-muted-foreground">${item.price.toFixed(2)}</span>
+                  <li key={item.item_id} className="py-3">
+                    {editingId === item.item_id ? (
+                      <div className="flex gap-2 items-end">
+                        <div className="flex-1">
+                          <Label htmlFor={`edit-name-${item.item_id}`} className="sr-only">
+                            Name
+                          </Label>
+                          <Input
+                            id={`edit-name-${item.item_id}`}
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                          />
+                        </div>
+                        <div className="w-24">
+                          <Label htmlFor={`edit-price-${item.item_id}`} className="sr-only">
+                            Price
+                          </Label>
+                          <Input
+                            id={`edit-price-${item.item_id}`}
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={editPrice}
+                            onChange={(e) => setEditPrice(e.target.value)}
+                          />
+                        </div>
+                        <Button size="sm" onClick={() => handleUpdateItem(item.item_id)}>
+                          Save
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={cancelEdit}>
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <span className="font-medium">{item.name}</span>
+                          <span className="ml-3 text-muted-foreground">
+                            ${item.price.toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => startEdit(item)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteItem(item.item_id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

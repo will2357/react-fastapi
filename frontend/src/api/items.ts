@@ -14,11 +14,20 @@ export interface CreateItemData {
 const ITEMS_BASE = "/api/v1/items";
 
 export async function fetchItems(): Promise<Item[]> {
-  const response = await apiClient.get< Item[]>(ITEMS_BASE);
+  const response = await apiClient.get<Item[]>(ITEMS_BASE);
   return response.data;
 }
 
 export async function createItem(data: CreateItemData): Promise<Item> {
-  const response = await apiClient.post< Item>(ITEMS_BASE, data);
+  const response = await apiClient.post<Item>(ITEMS_BASE, data);
   return response.data;
+}
+
+export async function updateItem(itemId: number, data: CreateItemData): Promise<Item> {
+  const response = await apiClient.put<Item>(`${ITEMS_BASE}/${itemId}`, data);
+  return response.data;
+}
+
+export async function deleteItem(itemId: number): Promise<void> {
+  await apiClient.delete(`${ITEMS_BASE}/${itemId}`);
 }
