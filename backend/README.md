@@ -142,9 +142,9 @@ app/
 | POST | `/api/v1/auth/login` | No | Get JWT token |
 | POST | `/api/v1/auth/signup` | No | Register new user |
 | GET | `/api/v1/auth/confirm/{token}` | No | Confirm email |
-| GET | `/api/v1/auth/me` | No | Get current user |
-| GET | `/api/v1/items/{id}` | No | Get item |
-| POST | `/api/v1/items` | No | Create item |
+| GET | `/api/v1/auth/me` | Yes | Get current user |
+| GET | `/api/v1/items/{id}` | Yes | Get item |
+| POST | `/api/v1/items` | Yes | Create item |
 | GET | `/api/v1/items/protected-items` | Yes | Protected endpoint |
 
 ## Authentication

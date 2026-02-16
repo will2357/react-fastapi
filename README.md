@@ -223,9 +223,9 @@ make format-check
 | GET | `/` | No | Welcome message |
 | GET | `/api/v1/health/` | No | Health check |
 | POST | `/api/v1/auth/login` | No | Get JWT token |
-| GET | `/api/v1/auth/me` | No | Get current user |
-| GET | `/api/v1/items/{id}` | No | Get item |
-| POST | `/api/v1/items` | No | Create item |
+| GET | `/api/v1/auth/me` | Yes | Get current user |
+| GET | `/api/v1/items/{id}` | Yes | Get item |
+| POST | `/api/v1/items` | Yes | Create item |
 | GET | `/api/v1/items/protected-items` | Yes | Protected endpoint |
 
 ## Authentication
