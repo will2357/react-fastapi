@@ -11,39 +11,11 @@ A full-stack application with a Vite/React frontend and FastAPI backend.
 
 ### 1. Start the Backend
 
-```bash
-cd backend
-
-# Activate virtual environment
-source .venv/bin/activate
-
-# Run the server
-python -m app.main
-
-# Or use Makefile
-make dev
-```
-
-The backend will run on `http://localhost:8000`
+See [backend/README.md](./backend/README.md) for detailed instructions.
 
 ### 2. Start the Frontend
 
-In a new terminal:
-
-```bash
-# Use the correct Node version
-nvm use
-
-cd frontend
-
-# Install dependencies (first time only)
-npm install
-
-# Run development server
-npm run dev
-```
-
-The frontend will run on `http://localhost:5173`
+See [frontend/README.md](./frontend/README.md) for detailed instructions.
 
 ## Using Makefiles
 
