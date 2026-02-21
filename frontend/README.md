@@ -9,6 +9,8 @@ A React 19 frontend with Vite, TypeScript, Tailwind CSS, Axios, and Zustand.
 
 ## Quick Start
 
+Create a `.env.development` file based upon the included `.env` template file.
+
 ```bash
 # Use the correct Node version
 nvm use

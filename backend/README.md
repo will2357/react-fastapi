@@ -4,15 +4,32 @@ A production-ready FastAPI backend with JWT authentication, structured logging, 
 
 ## Quick Start
 
+This project uses [uv](https://docs.astral.sh/uv/) to manage Python and its packages.
+It is recommended to [install uv](https://docs.astral.sh/uv/getting-started/installation/) before proceeding.
+
+Create a `.env.development` file based upon the included `.env` template file.
+
 ```bash
+# Install Python referenced in .python-version
+uv python install
+
+# Initialize venv
+uv venv
+
 # Activate virtual environment
 source .venv/bin/activate
+
+# Sync dependencies
+uv sync
 
 # Run the server
 python -m app.main
 
 # Or use uvicorn directly
 uvicorn app.main:app --reload
+
+# Or use Makefile after creating a .env.development file based upon the existing .env
+make dev
 ```
 
 ## Using Makefile
