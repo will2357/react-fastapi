@@ -1,4 +1,8 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
+
+// TODO: Replace with your own feature tests
+// This is a placeholder test file - remove or replace with your feature tests
+
 import { fetchItems, createItem, updateItem, deleteItem } from "../src/api/items";
 import apiClient from "../src/api/client";
 

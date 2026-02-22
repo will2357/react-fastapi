@@ -1,7 +1,7 @@
 [project]
-name = "backend"
+name = "{{PROJECT_NAME}}-backend"
 version = "0.1.0"
-description = "FastAPI Backend"
+description = "{{PROJECT_DESCRIPTION}}"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

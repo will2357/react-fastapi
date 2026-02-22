@@ -1,4 +1,4 @@
-# Frontend
+# {{APP_NAME}}
 
 A React 19 frontend with Vite, TypeScript, Tailwind CSS, Axios, and Zustand.
 

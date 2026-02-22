@@ -1,5 +1,8 @@
 """Tests for database connectivity and operations."""
 
+# TODO: Replace with your own feature tests
+# This file contains placeholder tests for the items table - remove or replace with your feature tests
+
 from sqlalchemy import text
 
 

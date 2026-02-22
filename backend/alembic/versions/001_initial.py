@@ -6,6 +6,9 @@ Create Date: 2026-02-13
 
 """
 
+# TODO: Replace with your own feature
+# This migration includes a placeholder "items" table - remove or replace with your feature
+
 from collections.abc import Sequence
 
 import sqlalchemy as sa

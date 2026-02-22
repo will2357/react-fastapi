@@ -120,7 +120,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 @app.get("/")
 async def root():
     logger.info("root_endpoint_called", path="/")
-    return {"message": "Hello from FastAPI!"}
+    return {"message": "Hello from {{PROJECT_NAME}}!"}
 
 
 @app.get("/test-app-exception")

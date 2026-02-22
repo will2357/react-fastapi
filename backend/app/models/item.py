@@ -1,5 +1,8 @@
 """Item model."""
 
+# TODO: Replace with your own model
+# This is a placeholder database model - remove or replace with your model
+
 from sqlalchemy import Column, Float, Integer, String
 
 from app.models.base import Base

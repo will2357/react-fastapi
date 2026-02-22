@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_JSON_FORMAT: bool = False
     SECRET_KEY: str = "your-secret-key-change-in-production"
-    DATABASE_URL: str = "postgresql://dev:argyle@localhost:5432/api_dev"
+    DATABASE_URL: str = "postgresql://dev:password@localhost:5432/api_dev"
 
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587

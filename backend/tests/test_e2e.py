@@ -153,6 +153,9 @@ class TestSignupEndpointsE2E:
 class TestItemsEndpointsE2E:
     """E2E tests for items endpoints."""
 
+    # TODO: Replace with your own feature tests
+    # This is a placeholder test class - remove or replace with your feature tests
+
     @pytest.fixture
     def auth_headers(self, client: TestClient):
         """Get auth headers with valid token."""

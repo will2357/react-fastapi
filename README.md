@@ -1,6 +1,42 @@
-# Vite + React + FastAPI Full-Stack App
+# Vite + React + FastAPI Full-Stack App Template
 
-A full-stack application with a Vite/React frontend and FastAPI backend.
+A full-stack application template with a Vite/React frontend and FastAPI backend.
+
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## Template Placeholders
+
+When using this as a GitHub template, replace these placeholders:
+
+| Placeholder | Description | Example |
+|-------------|-------------|---------|
+| `{{PROJECT_NAME}}` | Project name (kebab-case) | `my-app` |
+| `{{APP_NAME}}` | Display name | `My App` |
+| `{{PROJECT_DESCRIPTION}}` | Project description | `A full-stack app with React and FastAPI` |
+| `{{YOUR_DOMAIN}}` | Email domain | `example.com` |
+
+### Files to Update
+
+- `backend/app/core/config.py` - PROJECT_NAME, DATABASE_URL, SMTP settings
+- `backend/app/main.py` - App title
+- `backend/pyproject.toml` - Package name
+- `backend/.env` / `.env.test` - Database URLs, project name
+- `backend/alembic.ini` - Database URL
+- `frontend/package.json` - Package name
+- `frontend/index.html` - Page title
+
+### Placeholder Feature Code
+
+The following files contain example/placeholder code marked with `# TODO` comments:
+
+- `backend/app/api/v1/endpoints/items.py` - Example CRUD endpoint
+- `backend/app/models/item.py` - Example database model
+- `backend/app/schemas/item.py` - Example Pydantic schemas
+- `frontend/src/api/items.ts` - Example API client
+- `frontend/src/pages/Dashboard.tsx` - Example UI
+- `backend/alembic/versions/001_initial.py` - Example database table
 
 ## Prerequisites
 
@@ -195,10 +231,11 @@ make format-check
 | GET | `/` | No | Welcome message |
 | GET | `/api/v1/health/` | No | Health check |
 | POST | `/api/v1/auth/login` | No | Get JWT token |
+| POST | `/api/v1/auth/signup` | No | Register new user |
 | GET | `/api/v1/auth/me` | Yes | Get current user |
-| GET | `/api/v1/items/{id}` | Yes | Get item |
-| POST | `/api/v1/items` | Yes | Create item |
-| GET | `/api/v1/items/protected-items` | Yes | Protected endpoint |
+| GET | `/api/v1/auth/confirm/{token}` | No | Confirm email |
+
+> **Note:** The `/api/v1/items` endpoints are placeholder code marked with `# TODO` comments. Remove or replace with your own feature.
 
 ## Authentication
 

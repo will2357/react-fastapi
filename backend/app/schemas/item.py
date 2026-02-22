@@ -1,5 +1,8 @@
 """Item schemas."""
 
+# TODO: Replace with your own schemas
+# This is a placeholder Pydantic schema - remove or replace with your schema
+
 from pydantic import BaseModel, ConfigDict
 
 

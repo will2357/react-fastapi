@@ -1,5 +1,8 @@
 """Items endpoints."""
 
+# TODO: Replace with your own feature
+# This is a placeholder CRUD endpoint - remove or replace with your feature
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status

@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 
+// TODO: Replace with your own feature tests
+// This is a placeholder E2E test file - remove or replace with your feature tests
+
 const BASE_URL = "http://localhost:5174";
 
 test.describe("Items", () => {

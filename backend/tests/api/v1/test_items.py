@@ -1,5 +1,8 @@
 """Test items endpoints."""
 
+# TODO: Replace with your own feature tests
+# This is a placeholder test file - remove or replace with your feature tests
+
 import pytest
 from fastapi.testclient import TestClient
 

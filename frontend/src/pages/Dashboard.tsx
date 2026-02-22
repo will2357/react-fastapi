@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
+// TODO: Replace with your own feature
+// This is a placeholder UI - remove or replace with your feature
 import { fetchItems, createItem, updateItem, deleteItem, type Item } from "../api/items";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";

@@ -1,5 +1,8 @@
 import apiClient from "./client";
 
+// TODO: Replace with your own feature
+// This is a placeholder API client - remove or replace with your feature
+
 export interface Item {
   item_id: number;
   name: string;

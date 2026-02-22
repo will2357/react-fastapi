@@ -5,9 +5,7 @@ import os
 
 def test_directory_structure_exists():
     """Verify all required directories and files exist."""
-    base_path = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-    )
+    base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
     required_paths = [
         "app/__init__.py",

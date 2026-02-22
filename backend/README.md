@@ -1,6 +1,31 @@
-# FastAPI Backend
+# {{PROJECT_NAME}} Backend
 
 A production-ready FastAPI backend with JWT authentication, structured logging, modular structure, middleware, and comprehensive error handling.
+
+## Prerequisites
+
+- **PostgreSQL** - Make sure PostgreSQL is installed and running
+- **uv** - for managing Python and its packages
+
+## Database Setup
+
+Create the development and test databases:
+
+```bash
+# Connect to PostgreSQL
+psql -U postgres
+
+# Create dev database (replace {{PROJECT_NAME}} with your project name)
+CREATE DATABASE {{PROJECT_NAME}}_dev;
+
+# Create test database
+CREATE DATABASE {{PROJECT_NAME}}_test;
+
+# Exit psql
+\q
+```
+
+> **Note:** The default test database is currently named `api_test`. If you renamed it to `{{PROJECT_NAME}}_test`, update the `TEST_DATABASE_URL` in your `.env.test` file accordingly.
 
 ## Quick Start
 
